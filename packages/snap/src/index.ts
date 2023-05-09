@@ -1,5 +1,5 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types';
-import { panel, text } from '@metamask/snaps-ui';
+import { heading, panel, text } from '@metamask/snaps-ui';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -13,17 +13,24 @@ import { panel, text } from '@metamask/snaps-ui';
  */
 export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
   switch (request.method) {
-    case 'hello':
+    case 'io':
+      return new Promise((resolve) =>
+        resolve({
+          result: {
+            origin,
+            fork: 'abc123',
+            request,
+          },
+        }),
+      );
+    case 'send':
       return snap.request({
         method: 'snap_dialog',
         params: {
           type: 'confirmation',
           content: panel([
-            text(`Hello, **${origin}**!`),
-            text('This custom confirmation is just for display purposes.'),
-            text(
-              'But you can edit the snap source code to make it do something, if you want to!',
-            ),
+            heading('Simulate Transaction'),
+            text('Your transaction is being simulated in a forked node.'),
           ]),
         },
       });
@@ -31,3 +38,23 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
       throw new Error('Method not found.');
   }
 };
+
+// onTransaction https://docs.metamask.io/snaps/reference/exports#ontransaction
+// Execute data in forks
+
+/*
+export const onTransaction: OnTransactionHandler = async ({
+  transaction,
+  chainId,
+  transactionOrigin,
+}) => {
+  const insights = [];
+  return {
+    content: panel([
+      heading('My Transaction Insights'),
+      text('Here are the insights:'),
+      ...(insights.map((insight) => text(insight.value)))
+    ])
+  };
+};
+*/

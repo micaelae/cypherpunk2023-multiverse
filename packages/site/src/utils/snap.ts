@@ -62,3 +62,24 @@ export const sendHello = async () => {
 };
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
+
+export const sendTxData = async (data: Record<string, any>) => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: { method: 'send', params: { data } },
+    },
+  });
+};
+
+// Returns data to caller
+export const sendIo = async (data: Record<string, any>) => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: { method: 'io', params: { data } },
+    },
+  });
+};

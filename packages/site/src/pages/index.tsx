@@ -1,10 +1,12 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   connectSnap,
   getSnap,
   sendHello,
+  sendIo,
+  sendTxData,
   shouldDisplayReconnectButton,
 } from '../utils';
 import {
@@ -41,16 +43,6 @@ const Span = styled.span`
   color: ${(props) => props.theme.colors.primary.default};
 `;
 
-const Subtitle = styled.p`
-  font-size: ${({ theme }) => theme.fontSizes.large};
-  font-weight: 500;
-  margin-top: 0;
-  margin-bottom: 0;
-  ${({ theme }) => theme.mediaQueries.small} {
-    font-size: ${({ theme }) => theme.fontSizes.text};
-  }
-`;
-
 const CardContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -60,25 +52,6 @@ const CardContainer = styled.div`
   width: 100%;
   height: 100%;
   margin-top: 1.5rem;
-`;
-
-const Notice = styled.div`
-  background-color: ${({ theme }) => theme.colors.background.alternative};
-  border: 1px solid ${({ theme }) => theme.colors.border.default};
-  color: ${({ theme }) => theme.colors.text.alternative};
-  border-radius: ${({ theme }) => theme.radii.default};
-  padding: 2.4rem;
-  margin-top: 2.4rem;
-  max-width: 60rem;
-  width: 100%;
-
-  & > * {
-    margin: 0;
-  }
-  ${({ theme }) => theme.mediaQueries.small} {
-    margin-top: 1.2rem;
-    padding: 1.6rem;
-  }
 `;
 
 const ErrorMessage = styled.div`
@@ -117,23 +90,30 @@ const Index = () => {
     }
   };
 
-  const handleSendHelloClick = async () => {
+  const [input1, setInput1] = useState('');
+  const [input2, setInput2] = useState('');
+
+  const handleInput1Change = async (e: any) => {
     try {
-      await sendHello();
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
+      console.log(e.target.value);
+      setInput1(e.target.value);
+      const io = await sendIo(e.target.value);
+      console.log('=====', io);
+    } catch (error: any) {
+      console.error(error);
+      dispatch({ type: MetamaskActions.SetError, payload: error });
     }
+  };
+
+  const handleInput2Change = (e: any) => {
+    setInput2(e.target.value);
   };
 
   return (
     <Container>
       <Heading>
-        Welcome to <Span>template-snap</Span>
+        Welcome to <Span>Multiverse</Span>
       </Heading>
-      <Subtitle>
-        Get started by editing <code>src/index.ts</code>
-      </Subtitle>
       <CardContainer>
         {state.error && (
           <ErrorMessage>
@@ -167,6 +147,55 @@ const Index = () => {
             disabled={!state.isFlask}
           />
         )}
+
+        <Card
+          content={{
+            title: 'Input 1',
+            description: 'Enter txData to simulate and send to the snap.',
+            inputField: (
+              <textarea
+                id="input1"
+                value={input1}
+                onChange={handleInput1Change}
+              />
+            ),
+            button: (
+              <button
+                onClick={async () => {
+                  await sendTxData([input1]);
+                }}
+              >
+                Simulate and send
+              </button>
+            ),
+          }}
+          disabled={!state.installedSnap}
+        />
+
+        <Card
+          content={{
+            title: 'Input 2',
+            description: 'Enter txData to simulate and send to the snap.',
+            inputField: (
+              <textarea
+                id="input2"
+                value={input2}
+                onChange={handleInput2Change}
+              />
+            ),
+            button: (
+              <button
+                onClick={async () => {
+                  const x = await sendTxData([input2]);
+                  console.log(x);
+                }}
+              >
+                Simulate and send
+              </button>
+            ),
+          }}
+          disabled={!state.installedSnap}
+        />
         {shouldDisplayReconnectButton(state.installedSnap) && (
           <Card
             content={{
@@ -183,33 +212,6 @@ const Index = () => {
             disabled={!state.installedSnap}
           />
         )}
-        <Card
-          content={{
-            title: 'Send Hello message',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            state.isFlask &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
-        <Notice>
-          <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
-            <b>package.json</b> must be located in the server root directory and
-            the bundle must be hosted at the location specified by the location
-            field.
-          </p>
-        </Notice>
       </CardContainer>
     </Container>
   );

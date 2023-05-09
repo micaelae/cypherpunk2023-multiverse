@@ -1,9 +1,9 @@
 {
+  "homepage": "https://micaelae.github.io/cypherpunk2023-multiverse",
   "name": "@metamask/template-snap-monorepo",
   "version": "0.1.0",
   "private": true,
   "description": "",
-  "homepage": "https://github.com/MetaMask/template-snap-monorepo#readme",
   "bugs": {
     "url": "https://github.com/MetaMask/template-snap-monorepo/issues"
   },
@@ -17,6 +17,8 @@
     "packages/*"
   ],
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "yarn workspaces foreach --parallel --topological --verbose run build",
     "lint": "yarn lint:eslint && yarn lint:misc --check",
     "lint:eslint": "eslint . --cache --ext js,ts",
@@ -46,5 +48,8 @@
   "packageManager": "yarn@3.2.1",
   "engines": {
     "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "gh-pages": "^5.0.0"
   }
 }
