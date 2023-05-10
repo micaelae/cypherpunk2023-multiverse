@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "license": "(MIT-0 OR Apache-2.0)",
-  "homepage": "https://micaelae.github.io/cypherpunk2023-multiverse",
+  "homepage": ".",
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d public",
     "build": "cross-env GATSBY_TELEMETRY_DISABLED=1 gatsby build",
     "clean": "rimraf public",
     "lint": "yarn lint:eslint && yarn lint:misc --check",

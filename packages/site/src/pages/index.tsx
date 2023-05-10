@@ -114,6 +114,7 @@ const Index = () => {
       <Heading>
         Welcome to <Span>Multiverse</Span>
       </Heading>
+      {state.isFlask.toString()}
       <CardContainer>
         {state.error && (
           <ErrorMessage>
