@@ -1443,7 +1443,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.18.0, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.18.0, @babel/runtime@npm:^7.20.13, @babel/runtime@npm:^7.20.7, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
   version: 7.21.5
   resolution: "@babel/runtime@npm:7.21.5"
   dependencies:
@@ -1888,14 +1888,14 @@ __metadata:
   linkType: hard
 
 "@graphql-tools/merge@npm:^8.4.1":
-  version: 8.4.1
-  resolution: "@graphql-tools/merge@npm:8.4.1"
+  version: 8.4.2
+  resolution: "@graphql-tools/merge@npm:8.4.2"
   dependencies:
     "@graphql-tools/utils": ^9.2.1
     tslib: ^2.4.0
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
-  checksum: badb094e2eb29688d39d451a83909dc6f92a28c98dbb485a2f745a963813ad1310b1624c7618e97477c90f7935c99b06792bf63c4957a58c642af1609bcec143
+  checksum: 96d57a3e810055a2883bf9d3450e88082da207ffb1406222c9fa954e47bac4a328696785fdb7eec95a030d5f75504f7b4c6484c94f248cee13e6ad25aca70c75
   languageName: node
   linkType: hard
 
@@ -3926,9 +3926,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=10.0.0":
-  version: 20.1.1
-  resolution: "@types/node@npm:20.1.1"
-  checksum: 47961ee23f873c14c3f6045422ff3059f3bfb10231ef3080a7a72d7215cc8c2623fa8cedb7b246305962fa9c1e0c9e381e04b12eb3e9ec5d076025c6231ac8da
+  version: 20.1.2
+  resolution: "@types/node@npm:20.1.2"
+  checksum: 9bb2cf0a846e60cc06c44a5622c1998d8373c8675b24d11c86845a29f32c60f5bca9627f2a2535640f902be3dbcc60f126a895abe8e10f12e1467ae3deaba56d
   languageName: node
   linkType: hard
 
@@ -7573,9 +7573,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.284":
-  version: 1.4.388
-  resolution: "electron-to-chromium@npm:1.4.388"
-  checksum: 4a0117b3bdde350b5281de5bd3c33deff19979bb26350d70372b5b35aaed920421465ce93f56c48499add95d44cfb148bbedeb0be20bca2e770bc4539c38e67c
+  version: 1.4.392
+  resolution: "electron-to-chromium@npm:1.4.392"
+  checksum: 502784f59ebf5a6ee7a542983dbdf38c3e2b9a270e8f507454b63dcacd8166888a7aa2c48ae9325e489c58b2e9596ce67b61e5c12de0ac6410b8bf3b0ad6476d
   languageName: node
   linkType: hard
 
@@ -7685,7 +7685,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"enhanced-resolve@npm:^5.13.0, enhanced-resolve@npm:^5.8.3":
+"enhanced-resolve@npm:^5.14.0, enhanced-resolve@npm:^5.8.3":
   version: 5.14.0
   resolution: "enhanced-resolve@npm:5.14.0"
   dependencies:
@@ -9378,6 +9378,18 @@ __metadata:
   peerDependencies:
     gatsby: ^4.0.0-next
   checksum: 7f595583cf47e263d7b3384590d15eff756d1ef1e1207322a2c298a87fb2fd1ffcd3fbba54b31d9633c5bf0e5ee1a6f3d5bebffbbf6ae1dac5c3ca6a7bc0ab65
+  languageName: node
+  linkType: hard
+
+"gatsby-plugin-react-helmet@npm:^6.9.0":
+  version: 6.9.0
+  resolution: "gatsby-plugin-react-helmet@npm:6.9.0"
+  dependencies:
+    "@babel/runtime": ^7.20.13
+  peerDependencies:
+    gatsby: ^5.0.0-next
+    react-helmet: ^5.1.3 || ^6.0.0
+  checksum: 570f855ea713eafe45aca56e3c8a601ee7bf40ef158c1b904eb4b0a1d50f916479f174bdd5932846a0998dd160092504e1cd3faae8fa9c5a7edc8fc10c82c710
   languageName: node
   linkType: hard
 
@@ -14364,6 +14376,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-fast-compare@npm:^3.1.1":
+  version: 3.2.1
+  resolution: "react-fast-compare@npm:3.2.1"
+  checksum: 209b4dc3a9cc79c074a26ec020459efd8be279accaca612db2edb8ada2a28849ea51cf3d246fc0fafb344949b93a63a43798b6c1787559b0a128571883fe6859
+  languageName: node
+  linkType: hard
+
+"react-helmet@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "react-helmet@npm:6.1.0"
+  dependencies:
+    object-assign: ^4.1.1
+    prop-types: ^15.7.2
+    react-fast-compare: ^3.1.1
+    react-side-effect: ^2.1.0
+  peerDependencies:
+    react: ">=16.3.0"
+  checksum: a4998479dab7fc1c2799eddefb1870a9d881b5f71cfdf97979a9882e42f4bb50402d55335f308f461e735e01a06f46b16cc7b4e6bcb22c7a4a6f85a753c5c106
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -14410,6 +14443,15 @@ __metadata:
     react: 0.0.0-experimental-c8b778b7f-20220825
     webpack: ^5.59.0
   checksum: 55fc67030b775ededaafc149aa17ebdac6cd4df7f9d61f194f3e3d98bb5cf83a67bd313ce25b9c597df55fa88162840690ba2b61e22d36532478a008c5209385
+  languageName: node
+  linkType: hard
+
+"react-side-effect@npm:^2.1.0":
+  version: 2.1.2
+  resolution: "react-side-effect@npm:2.1.2"
+  peerDependencies:
+    react: ^16.3.0 || ^17.0.0 || ^18.0.0
+  checksum: c5eb1f42b464fb093bca59aaae0f1b2060373a2aaff95275b8781493628cdbbb6acdd6014e7883782c65c361f35a30f28cc515d68a1263ddb39cbbc47110be53
   languageName: node
   linkType: hard
 
@@ -15263,9 +15305,9 @@ __metadata:
   linkType: hard
 
 "signal-exit@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "signal-exit@npm:4.0.1"
-  checksum: 832043367dca23e61ab6033e8b41c595fc805119bfe4fee63dea201cdc809a8b086bc54597bbbc1b2cde1a63c7dd554d1295ed2cca92db598233834a0b59b281
+  version: 4.0.2
+  resolution: "signal-exit@npm:4.0.2"
+  checksum: 41f5928431cc6e91087bf0343db786a6313dd7c6fd7e551dbc141c95bb5fb26663444fd9df8ea47c5d7fc202f60aa7468c3162a9365cbb0615fc5e1b1328fe31
   languageName: node
   linkType: hard
 
@@ -15340,6 +15382,7 @@ __metadata:
     eslint-plugin-prettier: ^4.2.1
     gatsby: ^4.24.4
     gatsby-plugin-manifest: ^4.24.0
+    gatsby-plugin-react-helmet: ^6.9.0
     gatsby-plugin-styled-components: ^5.24.0
     gatsby-plugin-svgr: ^3.0.0-beta.0
     gh-pages: ^5.0.0
@@ -15347,6 +15390,7 @@ __metadata:
     prettier-plugin-packagejson: ^2.2.18
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-helmet: ^6.1.0
     react-is: ^18.2.0
     rimraf: ^3.0.2
     styled-components: 5.3.3
@@ -16960,8 +17004,8 @@ __metadata:
   linkType: hard
 
 "webpack@npm:^5.61.0":
-  version: 5.82.0
-  resolution: "webpack@npm:5.82.0"
+  version: 5.82.1
+  resolution: "webpack@npm:5.82.1"
   dependencies:
     "@types/eslint-scope": ^3.7.3
     "@types/estree": ^1.0.0
@@ -16972,7 +17016,7 @@ __metadata:
     acorn-import-assertions: ^1.7.6
     browserslist: ^4.14.5
     chrome-trace-event: ^1.0.2
-    enhanced-resolve: ^5.13.0
+    enhanced-resolve: ^5.14.0
     es-module-lexer: ^1.2.1
     eslint-scope: 5.1.1
     events: ^3.2.0
@@ -16992,7 +17036,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 499e7f5f24fccaa76f64f2a01f91f371073416f568ef6171dc73187a89078f0c33410d4c9f40d411f0827bab8455f8476eabd803ef4d2920d9a2e5f17efa2703
+  checksum: 747ee7ebd238c15249c2652060e3c6ca6d62cc66dcf7e4e2824ecd4875b7ea5e01fce8f4179080a3e84dfdb3c8d0992700444c7c5a05ef47b38c0623d3ac76de
   languageName: node
   linkType: hard
 

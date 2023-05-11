@@ -9,6 +9,7 @@ const config: GatsbyConfig = {
   plugins: [
     'gatsby-plugin-svgr',
     'gatsby-plugin-styled-components',
+    'gatsby-plugin-react-helmet',
     {
       resolve: 'gatsby-plugin-manifest',
       options: {

@@ -1,14 +1,10 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types';
-import { divider, heading, panel, spinner, text } from '@metamask/snaps-ui';
+import { copyable, divider, heading, panel, text } from '@metamask/snaps-ui';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
  *
- * @param args - The request handler args as object.
- * @param args.origin - The origin of the request, e.g., the website that
- * invoked the snap.
- * @param args.request - A validated JSON-RPC request object.
- * @param req
+ * @param req - A validated JSON-RPC request object.
  * @returns The result of `snap_dialog`.
  * @throws If the request method is not valid for this snap.
  */
@@ -31,6 +27,21 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
       await snap.request({
         method: 'snap_manageState',
         params: { operation: 'update', newState: { forkId } },
+      });
+
+      snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: 'alert',
+          content: panel([
+            heading('Created a fork'),
+            text(
+              "A reference to the new fork is saved in this MetaMask snap's local storage so it can be reused",
+            ),
+            text('Click below to copy the forkId to your clipboard'),
+            copyable(forkId),
+          ]),
+        },
       });
       return new Promise((resolve) =>
         resolve({

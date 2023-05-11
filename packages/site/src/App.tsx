@@ -1,5 +1,6 @@
 import { FunctionComponent, ReactNode, useContext } from 'react';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet';
 import { Footer, Header } from './components';
 
 import { GlobalStyle } from './config/theme';
@@ -22,6 +23,7 @@ export const App: FunctionComponent<AppProps> = ({ children }) => {
 
   return (
     <>
+      <Helmet title="Multiverse" />
       <GlobalStyle />
       <Wrapper>
         <Header handleToggleClick={toggleTheme} />

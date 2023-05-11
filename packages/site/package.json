@@ -29,8 +29,10 @@
   },
   "dependencies": {
     "@metamask/providers": "^9.0.0",
+    "gatsby-plugin-react-helmet": "^6.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
     "react-is": "^18.2.0",
     "styled-components": "5.3.3"
   },
