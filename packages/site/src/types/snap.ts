@@ -5,4 +5,5 @@ export type Snap = {
   id: string;
   version: string;
   initialPermissions: Record<string, unknown>;
+  enabled: boolean;
 };

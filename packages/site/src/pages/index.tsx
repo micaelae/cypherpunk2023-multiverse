@@ -1,19 +1,18 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import {
   connectSnap,
   getSnap,
-  sendHello,
-  sendIo,
-  sendTxData,
+  createFork,
+  simulateTx,
   shouldDisplayReconnectButton,
+  getExistingFork,
 } from '../utils';
 import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  SendHelloButton,
   Card,
 } from '../components';
 
@@ -90,31 +89,39 @@ const Index = () => {
     }
   };
 
-  const [input1, setInput1] = useState('');
-  const [input2, setInput2] = useState('');
+  const [forkConfig, setForkConfig] = useState('');
+  const [txData, setTxData] = useState(
+    '{"to": "0x2121", "data": "0x12313213"}',
+  );
+  const [forkId, setForkId] = useState();
 
-  const handleInput1Change = async (e: any) => {
+  const handleForkConfigChange = async (e: any) => {
     try {
-      console.log(e.target.value);
-      setInput1(e.target.value);
-      const io = await sendIo(e.target.value);
-      console.log('=====', io);
+      setForkConfig(e.target.value);
+      await createFork(e.target.value);
     } catch (error: any) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
     }
   };
 
-  const handleInput2Change = (e: any) => {
-    setInput2(e.target.value);
+  const handleTxDataChange = (e: any) => {
+    setTxData(e.target.value);
   };
+
+  useEffect(() => {
+    getExistingFork().then((f) => {
+      if (f) {
+        setForkId(f);
+      }
+    });
+  }, []);
 
   return (
     <Container>
       <Heading>
-        Welcome to <Span>Multiverse</Span>
+        <Span>Multiverse</Span>
       </Heading>
-      {state.isFlask.toString()}
       <CardContainer>
         {state.error && (
           <ErrorMessage>
@@ -150,53 +157,68 @@ const Index = () => {
         )}
 
         <Card
+          fullWidth
           content={{
-            title: 'Input 1',
-            description: 'Enter txData to simulate and send to the snap.',
+            title: 'Enter fork config (optional)',
+            description: 'This calls a MetaMask snap to create a fork.',
             inputField: (
               <textarea
-                id="input1"
-                value={input1}
-                onChange={handleInput1Change}
+                id="forkConfig"
+                value={forkConfig}
+                onChange={handleForkConfigChange}
               />
             ),
             button: (
               <button
                 onClick={async () => {
-                  await sendTxData([input1]);
+                  const forkResponse = await createFork([forkConfig]);
+                  if (forkResponse?.forkId) {
+                    setForkId(forkResponse.forkId);
+                  }
                 }}
               >
-                Simulate and send
+                Create a fork
               </button>
             ),
           }}
           disabled={!state.installedSnap}
         />
 
-        <Card
-          content={{
-            title: 'Input 2',
-            description: 'Enter txData to simulate and send to the snap.',
-            inputField: (
-              <textarea
-                id="input2"
-                value={input2}
-                onChange={handleInput2Change}
-              />
-            ),
-            button: (
-              <button
-                onClick={async () => {
-                  const x = await sendTxData([input2]);
-                  console.log(x);
-                }}
-              >
-                Simulate and send
-              </button>
-            ),
-          }}
-          disabled={!state.installedSnap}
-        />
+        {forkId && (
+          <Card
+            fullWidth
+            content={{
+              title: 'Simulate tx using a fork',
+              description: 'Enter txData to simulate on the live fork.',
+              inputField: (
+                <textarea
+                  id="txData"
+                  value={txData}
+                  onChange={handleTxDataChange}
+                />
+              ),
+              button: (
+                <button
+                  onClick={async () => {
+                    try {
+                      await simulateTx(JSON.parse(txData));
+                    } catch (e) {
+                      console.error(e);
+                      dispatch({
+                        type: MetamaskActions.SetError,
+                        payload: e,
+                      });
+                    }
+                  }}
+                >
+                  Simulate and send
+                </button>
+              ),
+            }}
+            disabled={!state.installedSnap}
+          />
+        )}
+
         {shouldDisplayReconnectButton(state.installedSnap) && (
           <Card
             content={{

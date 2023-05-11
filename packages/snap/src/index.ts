@@ -1,5 +1,5 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types';
-import { heading, panel, text } from '@metamask/snaps-ui';
+import { divider, heading, panel, spinner, text } from '@metamask/snaps-ui';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -8,32 +8,60 @@ import { heading, panel, text } from '@metamask/snaps-ui';
  * @param args.origin - The origin of the request, e.g., the website that
  * invoked the snap.
  * @param args.request - A validated JSON-RPC request object.
+ * @param req
  * @returns The result of `snap_dialog`.
  * @throws If the request method is not valid for this snap.
  */
-export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
+export const onRpcRequest: OnRpcRequestHandler = async (req) => {
+  const { request } = req;
+
   switch (request.method) {
-    case 'io':
+    case 'get_fork': {
+      const state = await snap.request({
+        method: 'snap_manageState',
+        params: { operation: 'get' },
+      });
+      const forkId = state ? state.forkId : undefined;
+      return forkId;
+    }
+
+    case 'create_fork': {
+      // TODO this should create a fork
+      const forkId = 'testForkId';
+      await snap.request({
+        method: 'snap_manageState',
+        params: { operation: 'update', newState: { forkId } },
+      });
       return new Promise((resolve) =>
         resolve({
-          result: {
-            origin,
-            fork: 'abc123',
-            request,
-          },
+          forkId,
         }),
       );
-    case 'send':
+    }
+
+    case 'simulate_tx': {
+      const state = await snap.request({
+        method: 'snap_manageState',
+        params: { operation: 'get' },
+      });
+      const forkId = state ? state.forkId : undefined;
+
+      // TODO this should simulate request.params in fork forkId
       return snap.request({
         method: 'snap_dialog',
         params: {
-          type: 'confirmation',
+          type: 'alert',
           content: panel([
             heading('Simulate Transaction'),
-            text('Your transaction is being simulated in a forked node.'),
+            text(
+              `Your transaction will be simulated in a forked node:${forkId}`,
+            ),
+            divider(),
+            text(`Transaction details: ${JSON.stringify(req.request.params)}`),
           ]),
         },
       });
+    }
     default:
       throw new Error('Method not found.');
   }
