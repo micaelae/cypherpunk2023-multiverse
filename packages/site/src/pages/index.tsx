@@ -14,6 +14,7 @@ import {
   InstallFlaskButton,
   ReconnectButton,
   Card,
+  Header,
 } from '../components';
 
 const Container = styled.div`
@@ -142,18 +143,14 @@ const Index = () => {
           />
         )}
 
+        {forkId && <p>Live Fork: {forkId}</p>}
+
         <Card
           fullWidth
           content={{
-            title: 'Enter fork config (optional)',
-            description: 'This calls a MetaMask snap to create a fork.',
-            inputField: (
-              <textarea
-                id="forkConfig"
-                value={forkConfig}
-                onChange={handleForkConfigChange}
-              />
-            ),
+            title: 'Create a fork',
+            description:
+              'This calls a MetaMask snap that creates a fork using Besu.',
             button: (
               <button
                 onClick={async () => {

@@ -1,5 +1,6 @@
 import { OnRpcRequestHandler } from '@metamask/snaps-types';
 import { copyable, divider, heading, panel, text } from '@metamask/snaps-ui';
+import { createFork } from './utils/besu';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -22,8 +23,7 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
     }
 
     case 'create_fork': {
-      // TODO this should create a fork
-      const forkId = 'testForkId';
+      const forkId = await createFork();
       await snap.request({
         method: 'snap_manageState',
         params: { operation: 'update', newState: { forkId } },
