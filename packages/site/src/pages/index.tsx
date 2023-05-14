@@ -10,6 +10,7 @@ import {
   sendTx,
   switchToForkedNetwork,
   requestMerge,
+  acceptMerge,
 } from '../utils';
 import {
   ConnectButton,
@@ -17,6 +18,7 @@ import {
   ReconnectButton,
   Card,
   ProposeMergeButton,
+  AcceptMergeButton,
 } from '../components';
 import { FORK_CHAIN_ID } from '../utils/constants';
 
@@ -218,6 +220,33 @@ const Index = () => {
                   onClick={async () => {
                     try {
                       await requestMerge();
+                    } catch (e) {
+                      dispatch({
+                        type: MetamaskActions.SetError,
+                        payload: e,
+                      });
+                    }
+                  }}
+                />
+              ),
+            }}
+            disabled={!state.installedSnap}
+          />
+        )}
+
+        {forkId && (
+          <Card
+            fullWidth
+            content={{
+              title: 'Sign live fork merge',
+              description:
+                "This accepts other trade participant's request to merge the live fork back into the main chain.",
+              button: (
+                <AcceptMergeButton
+                  fullWidth
+                  onClick={async () => {
+                    try {
+                      await acceptMerge();
                     } catch (e) {
                       dispatch({
                         type: MetamaskActions.SetError,

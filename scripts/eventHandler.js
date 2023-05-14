@@ -36,8 +36,12 @@ app.post('/reset', (req, res) => {
 app.get('/logs', (req, res) => {
   try {
     // console.debug(req);
+    console.log(approvalState);
     res.writeHead(200, { 'Content-Type': 'text/html' });
-    if (Object.values(approvalState).every((state) => state)) {
+    if (
+      Object.values(approvalState).length === 2 &&
+      Object.values(approvalState).every((state) => state)
+    ) {
       res.write('MergeFinalized');
     } else if (Object.values(approvalState).some((state) => state)) {
       res.write('MergeProposal');

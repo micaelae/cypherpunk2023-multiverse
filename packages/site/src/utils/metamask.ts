@@ -29,7 +29,11 @@ export const switchToForkedNetwork = async () => {
         chainId: ethers.toQuantity(1553),
         chainName: 'Local Besu fork',
         rpcUrls: [BESU_ENDPOINT],
-        nativeCurrency: 'ETH',
+        nativeCurrency: {
+          name: 'ETH',
+          symbol: 'ETH',
+          decimals: 18,
+        },
       },
     ],
   });

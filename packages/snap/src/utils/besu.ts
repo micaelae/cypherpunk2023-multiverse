@@ -24,6 +24,7 @@ export const createFork = async (chainId?: number) => {
   }
 };
 
+// TODO: call this DURING SWITCH network as well
 export const switchFork = async (forkId: string, chainId?: number) => {
   try {
     const besuResponse = await fetch(BESU_ENDPOINT, {

@@ -63,7 +63,7 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
           params: {
             type: 'alert',
             content: panel([
-              heading('Created a fork'),
+              heading('Successfully created a forked network'),
               text(
                 "A reference to the new forked network is saved in this MetaMask snap's local storage so it can be reused",
               ),
@@ -102,19 +102,9 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
         return undefined;
       }
 
-      await snap.request({
-        method: 'snap_manageState',
-        params: {
-          operation: 'update',
-          newState: {
-            ...state,
-            isMergeRequested: true,
-          },
-        },
-      });
       console.log('request_merge updated state');
 
-      await snap.request({
+      const response = await snap.request({
         method: 'snap_dialog',
         params: {
           type: 'confirmation',
@@ -131,8 +121,20 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
           ]),
         },
       });
-      console.log('request_merge snap dialog');
-      await signMerge(`TODO${tradingPartner ?? ''}`);
+      console.log('request_merge snap dialog', response);
+      if (response) {
+        await snap.request({
+          method: 'snap_manageState',
+          params: {
+            operation: 'update',
+            newState: {
+              ...state,
+              isMergeRequested: true,
+            },
+          },
+        });
+        await signMerge(`TODO${tradingPartner ?? ''}`);
+      }
       console.log('request_merge signMerge');
       break;
     }
@@ -148,7 +150,7 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
         return undefined;
       }
 
-      await snap.request({
+      const response = await snap.request({
         method: 'snap_dialog',
         params: {
           type: 'confirmation',
@@ -162,7 +164,20 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
           ]),
         },
       });
-      await signMerge(`TODO${tradingPartner ?? ''}`);
+
+      if (response) {
+        await snap.request({
+          method: 'snap_manageState',
+          params: {
+            operation: 'update',
+            newState: {
+              ...state,
+              isMergeRequested: true,
+            },
+          },
+        });
+        await signMerge(`TODO${tradingPartner ?? ''}`);
+      }
       break;
     }
     default:
@@ -209,7 +224,7 @@ export const onCronjob: OnCronjobHandler = async (r) => {
               ]),
             },
           });
-          if (response === 'confirm') {
+          if (response) {
             await snap.request({
               method: 'snap_manageState',
               params: {
@@ -220,6 +235,7 @@ export const onCronjob: OnCronjobHandler = async (r) => {
                 },
               },
             });
+            await signMerge(`TODO${tradingPartner ?? ''}`);
           }
           break;
         }
@@ -230,7 +246,10 @@ export const onCronjob: OnCronjobHandler = async (r) => {
             params: {
               type: 'alert',
               content: panel([
-                heading('The live fork has been merged to main network'),
+                heading('The live fork has been merged to main'),
+                text(
+                  `Both you and ${tradingPartner} have agreed to merge the forked transactions back to the main network. Transactions will be reflected in the source network`,
+                ),
                 divider(),
                 text('Fork hash:'),
                 copyable(forkId.toString()),
