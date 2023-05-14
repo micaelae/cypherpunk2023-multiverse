@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { defaultSnapOrigin } from '../config';
 import { GetSnapsResponse, Snap } from '../types';
 
@@ -63,33 +64,43 @@ export const sendHello = async () => {
 
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');
 
-export const getExistingFork = async (): Promise<any> => {
+export const getSnapState = async (): Promise<any> => {
   return await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
-      request: { method: 'get_fork' },
+      request: { method: 'get_state' },
     },
   });
 };
 
 // Returns fork data to caller
-export const createFork = async (data?: Record<string, any>): Promise<any> => {
+export const createFork = async (): Promise<any> => {
   return await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
-      request: { method: 'create_fork', params: { data } },
+      request: { method: 'create_fork', params: {} },
     },
   });
 };
 
-export const simulateTx = async (data: Record<string, any>) => {
+export const requestMerge = async (): Promise<any> => {
   return await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
-      request: { method: 'simulate_tx', params: { data } },
+      request: { method: 'request_merge', params: {} },
+    },
+  });
+};
+
+export const acceptMerge = async (): Promise<any> => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: { method: 'accept_merge', params: {} },
     },
   });
 };

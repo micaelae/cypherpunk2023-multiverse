@@ -94,6 +94,14 @@ export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
   );
 };
 
+export const ProposeMergeButton = (props: ComponentProps<typeof Button>) => {
+  return <Button {...props}>Propose merge</Button>;
+};
+
+export const AcceptMergeButton = (props: ComponentProps<typeof Button>) => {
+  return <Button {...props}>Accept merge proposal</Button>;
+};
+
 export const SendHelloButton = (props: ComponentProps<typeof Button>) => {
   return <Button {...props}>Send message</Button>;
 };

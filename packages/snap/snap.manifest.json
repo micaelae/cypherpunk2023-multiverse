@@ -1,5 +1,5 @@
 {
-  "version": "0.1.6",
+  "version": "0.1.8",
   "description": "Cypherpunk 2023 project",
   "proposedName": "Multiverse Snap",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "bL48qbf2MksMy/8CCbUQ1236Aoeym91oaO81KgdbfIg=",
+    "shasum": "dsYnL8UlfL9Z6NM9RJjUFiUdMiB/ovce+61kNK/Qwxc=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -24,7 +24,21 @@
       "dapps": true,
       "snaps": false
     },
-    "endowment:network-access": {}
+    "endowment:cronjob": {
+      "jobs": [
+        {
+          "expression": "* * * * *",
+          "request": {
+            "method": "listenForForkEvents",
+            "params": {}
+          }
+        }
+      ]
+    },
+    "endowment:network-access": {},
+    "endowment:transaction-insight": {
+      "allowTransactionOrigin": true
+    }
   },
   "manifestVersion": "0.1"
 }

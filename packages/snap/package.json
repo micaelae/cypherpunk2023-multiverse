@@ -1,6 +1,6 @@
 {
   "name": "cypherpunk2023-multiverse-snap",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "The 'Hello, world!' of MetaMask Snaps, now written in TypeScript.",
   "repository": {
     "type": "git",
@@ -26,9 +26,12 @@
     "start": "mm-snap watch"
   },
   "dependencies": {
-    "@metamask/snaps-types": "^0.32.2",
-    "@metamask/snaps-ui": "^0.32.2",
-    "buffer": "^6.0.3"
+    "@metamask/json-rpc-engine": "^7.0.0",
+    "@metamask/snaps-types": "0.32.2",
+    "@metamask/snaps-ui": "0.32.2",
+    "buffer": "^6.0.3",
+    "cors": "^2.8.5",
+    "ethers": "^6.0.0"
   },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^2.0.3",
@@ -37,7 +40,7 @@
     "@metamask/eslint-config-jest": "^10.0.0",
     "@metamask/eslint-config-nodejs": "^10.0.0",
     "@metamask/eslint-config-typescript": "^10.0.0",
-    "@metamask/snaps-cli": "^0.32.2",
+    "@metamask/snaps-cli": "0.32.2",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "eslint": "^8.21.0",

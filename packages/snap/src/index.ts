@@ -1,6 +1,6 @@
-import { OnRpcRequestHandler } from '@metamask/snaps-types';
+import { OnCronjobHandler, OnRpcRequestHandler } from '@metamask/snaps-types';
 import { copyable, divider, heading, panel, text } from '@metamask/snaps-ui';
-import { createFork } from './utils/besu';
+import { createFork, getLogs, resetEvents, signMerge } from './utils/besu';
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -10,39 +10,78 @@ import { createFork } from './utils/besu';
  * @throws If the request method is not valid for this snap.
  */
 export const onRpcRequest: OnRpcRequestHandler = async (req) => {
+  console.log('req', req);
   const { request } = req;
 
   switch (request.method) {
-    case 'get_fork': {
+    case 'get_state': {
       const state = await snap.request({
         method: 'snap_manageState',
         params: { operation: 'get' },
       });
-      const forkId = state ? state.forkId : undefined;
-      return forkId;
+      return state;
     }
 
     case 'create_fork': {
+      console.log('create_fork');
       const forkId = await createFork();
-      await snap.request({
-        method: 'snap_manageState',
-        params: { operation: 'update', newState: { forkId } },
-      });
 
-      snap.request({
+      console.log(forkId);
+      const tradingPartner = await snap.request({
         method: 'snap_dialog',
         params: {
-          type: 'alert',
+          type: 'prompt',
           content: panel([
-            heading('Created a fork'),
+            heading("Enter the wallet address you'd like to trade with"),
             text(
-              "A reference to the new fork is saved in this MetaMask snap's local storage so it can be reused",
+              'A live fork shared between you and this address will be created. Both you and this address must approve merging the forked transactions back to the main network.',
             ),
-            text('Click below to copy the forkId to your clipboard'),
-            copyable(forkId),
           ]),
+          placeholder: '0x123...',
         },
       });
+
+      if (forkId && tradingPartner && typeof tradingPartner === 'string') {
+        await snap.request({
+          method: 'snap_manageState',
+          params: {
+            operation: 'update',
+            newState: {
+              forkId,
+              isMergeRequested: false,
+              tradingPartner,
+              mainNetwork: {
+                chainId: 1,
+                nativeCurrency: 'ETH',
+              },
+            },
+          },
+        });
+
+        snap.request({
+          method: 'snap_dialog',
+          params: {
+            type: 'alert',
+            content: panel([
+              heading('Created a fork'),
+              text(
+                "A reference to the new forked network is saved in this MetaMask snap's local storage so it can be reused",
+              ),
+              divider(),
+              text('Hash of live fork:'),
+              copyable(forkId.toString()),
+              text('Trading with:'),
+              copyable(tradingPartner),
+            ]),
+          },
+        });
+
+        try {
+          await resetEvents();
+        } catch (e) {
+          console.error(e);
+        }
+      }
       return new Promise((resolve) =>
         resolve({
           forkId,
@@ -50,50 +89,174 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
       );
     }
 
-    case 'simulate_tx': {
+    case 'request_merge': {
       const state = await snap.request({
         method: 'snap_manageState',
         params: { operation: 'get' },
       });
       const forkId = state ? state.forkId : undefined;
+      const tradingPartner = state ? state.tradingPartner : undefined;
 
-      // TODO this should simulate request.params in fork forkId
-      return snap.request({
+      console.log('request_merge', forkId, tradingPartner);
+      if (!forkId || !tradingPartner) {
+        return undefined;
+      }
+
+      await snap.request({
+        method: 'snap_manageState',
+        params: {
+          operation: 'update',
+          newState: {
+            ...state,
+            isMergeRequested: true,
+          },
+        },
+      });
+      console.log('request_merge updated state');
+
+      await snap.request({
         method: 'snap_dialog',
         params: {
-          type: 'alert',
+          type: 'confirmation',
           content: panel([
-            heading('Simulate Transaction'),
+            heading('Initiate merging live fork back to main network'),
             text(
-              `Your transaction will be simulated in a forked node:${forkId}`,
+              `Address ${tradingPartner} will be prompted to approve the merge back to the main network once your request has been confirmed.`,
             ),
             divider(),
-            text(`Transaction details: ${JSON.stringify(req.request.params)}`),
+            text('Fork hash:'),
+            copyable(forkId.toString()),
+            text('Forked network:'),
+            copyable(((state as any).mainNetwork as any).chainId.toString()),
           ]),
         },
       });
+      console.log('request_merge snap dialog');
+      await signMerge(`TODO${tradingPartner ?? ''}`);
+      console.log('request_merge signMerge');
+      break;
+    }
+
+    case 'accept_merge': {
+      const state = await snap.request({
+        method: 'snap_manageState',
+        params: { operation: 'get' },
+      });
+      const forkId = state ? state.forkId : undefined;
+      const tradingPartner = state ? state.tradingPartner : undefined;
+      if (!forkId) {
+        return undefined;
+      }
+
+      await snap.request({
+        method: 'snap_dialog',
+        params: {
+          type: 'confirmation',
+          content: panel([
+            heading('Finalize merge of live fork back to main network'),
+            divider(),
+            text('Fork hash:'),
+            copyable(forkId.toString()),
+            text('Main network:'),
+            copyable(((state as any).mainNetwork as any).chainId.toString()),
+          ]),
+        },
+      });
+      await signMerge(`TODO${tradingPartner ?? ''}`);
+      break;
     }
     default:
       throw new Error('Method not found.');
   }
 };
 
-// onTransaction https://docs.metamask.io/snaps/reference/exports#ontransaction
-// Execute data in forks
+export const onCronjob: OnCronjobHandler = async (r) => {
+  const { request } = r;
+  console.log(r, request, origin);
+  const state = await snap.request({
+    method: 'snap_manageState',
+    params: { operation: 'get' },
+  });
+  const forkId = state ? state.forkId : undefined;
+  const tradingPartner = state ? state.tradingPartner : undefined;
+  if (!forkId || !tradingPartner) {
+    return;
+  }
 
-/*
-export const onTransaction: OnTransactionHandler = async ({
-  transaction,
-  chainId,
-  transactionOrigin,
-}) => {
-  const insights = [];
-  return {
-    content: panel([
-      heading('My Transaction Insights'),
-      text('Here are the insights:'),
-      ...(insights.map((insight) => text(insight.value)))
-    ])
-  };
+  switch (request.method) {
+    case 'listenForForkEvents': {
+      const event = await getLogs();
+      const latestLog = event?.[0];
+
+      switch (latestLog) {
+        case 'MergeProposal': {
+          const response = await snap.request({
+            method: 'snap_dialog',
+            params: {
+              type: 'confirmation',
+              content: panel([
+                heading('Finalize merge of live fork back to main network'),
+                text(
+                  `Address ${tradingPartner} has requested to merge the forked transactions back to the main network and needs your confirmation.`,
+                ),
+                divider(),
+                text('Fork hash:'),
+                copyable(forkId.toString()),
+                text('Main network:'),
+                copyable(
+                  ((state as any).mainNetwork as any).chainId.toString(),
+                ),
+              ]),
+            },
+          });
+          if (response === 'confirm') {
+            await snap.request({
+              method: 'snap_manageState',
+              params: {
+                operation: 'update',
+                newState: {
+                  ...state,
+                  isMergeRequested: true,
+                },
+              },
+            });
+          }
+          break;
+        }
+
+        case 'MergeFinalized': {
+          await snap.request({
+            method: 'snap_dialog',
+            params: {
+              type: 'alert',
+              content: panel([
+                heading('The live fork has been merged to main network'),
+                divider(),
+                text('Fork hash:'),
+                copyable(forkId.toString()),
+                text('Main network:'),
+                copyable(
+                  ((state as any).mainNetwork as any).chainId.toString(),
+                ),
+              ]),
+            },
+          });
+
+          await snap.request({
+            method: 'snap_manageState',
+            params: {
+              operation: 'update',
+              newState: {},
+            },
+          });
+          break;
+        }
+        default:
+          break;
+      }
+      break;
+    }
+    default:
+      throw new Error('Method not found.');
+  }
 };
-*/

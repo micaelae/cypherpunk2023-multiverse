@@ -1,3 +1,4 @@
+import * as ethers from 'ethers';
 /**
  * Detect if the wallet injecting the ethereum object is Flask.
  *
@@ -17,4 +18,35 @@ export const isFlask = async () => {
   } catch {
     return false;
   }
+};
+
+const BESU_ENDPOINT = 'http://127.0.0.1:8545';
+export const switchToForkedNetwork = async () => {
+  await window.ethereum.request({
+    method: 'wallet_addEthereumChain',
+    params: [
+      {
+        chainId: ethers.toQuantity(1553),
+        chainName: 'Local Besu fork',
+        rpcUrls: [BESU_ENDPOINT],
+        nativeCurrency: 'ETH',
+      },
+    ],
+  });
+};
+
+export const switchToMainNetwork = async (networkDetails: any) => {
+  await window.ethereum.request({
+    method: 'wallet_addEthereumChain',
+    params: [networkDetails],
+  });
+};
+
+export const sendTx = async (data: any) => {
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  console.log('provider', await provider.getNetwork());
+  const signer = await provider.getSigner();
+
+  const txSubmitRes = await signer.sendTransaction(data);
+  return txSubmitRes;
 };

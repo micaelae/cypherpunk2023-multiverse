@@ -63,7 +63,7 @@ export const Header = ({
     <HeaderWrapper>
       <LogoWrapper>
         <SnapLogo color={theme.colors.icon.default} size={36} />
-        <Title>Multiverse test app</Title>
+        <Title>Multiverse test page</Title>
       </LogoWrapper>
       <RightContainer>
         <Toggle
