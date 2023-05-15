@@ -44,13 +44,14 @@ export const light: DefaultTheme = {
       default: '#FFFFFF',
       alternative: '#43384B',
       inverse: '#43384B',
+      action: 'linear-gradient(92.14deg, #ddd2e6 1.25%, #c7d9ed 98.51%)',
     },
     icon: {
       default: '#141618',
       alternative: '#BBC0C5',
     },
     text: {
-      default: '#24272A',
+      default: '#434547',
       muted: '#9B8CA5',
       alternative: '#D6D9DC',
       inverse: '#D6D9DC',
@@ -83,6 +84,7 @@ export const dark: DefaultTheme = {
       default: '#2B2430',
       alternative: '#43384B',
       inverse: '#D6CEDB',
+      action: 'linear-gradient(92.14deg, #6657c2 1.25%, #9357c2 98.51%)',
     },
     icon: {
       default: '#FFFFFF',

@@ -34,8 +34,8 @@ const Link = styled.a`
 `;
 
 export const ActionButton = styled.button`
-  background: linear-gradient(92.14deg, #6657c2 1.25%, #9357c2 98.51%);
-  color: ${(props) => props.theme.colors.text.alternative};
+  background: ${(props) => props.theme.colors.background.action};
+  color: ${(props) => props.theme.colors.text.default};
   border: 1px solid transparent;
 `;
 
