@@ -51,7 +51,7 @@ export const light: DefaultTheme = {
     },
     text: {
       default: '#24272A',
-      muted: '#6A737D',
+      muted: '#9B8CA5',
       alternative: '#D6D9DC',
       inverse: '#D6D9DC',
     },
@@ -175,7 +175,8 @@ export const GlobalStyle = createGlobalStyle`
 
     &:disabled,
     &[disabled] {
-      border: 1px solid ${(props) => props.theme.colors.background.inverse};
+      color: ${(props) => props.theme.colors.text.muted};
+      border: 1px solid transparent;
       cursor: not-allowed;
     }
 

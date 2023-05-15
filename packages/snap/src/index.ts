@@ -169,6 +169,9 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
           placeholder: '0xAB601029cfA...',
         },
       });
+      if (!forkIdToJoin) {
+        return undefined;
+      }
 
       const tradingPartnerToJoin = await snap.request({
         method: 'snap_dialog',
@@ -183,8 +186,7 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
           placeholder: '0xAB601029cfA...',
         },
       });
-
-      if (!forkIdToJoin || !tradingPartnerToJoin) {
+      if (!tradingPartnerToJoin) {
         return undefined;
       }
 

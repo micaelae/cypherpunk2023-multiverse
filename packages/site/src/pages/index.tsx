@@ -126,6 +126,7 @@ const Index = () => {
             button: (
               <>
                 <ActionButton
+                  disabled={!state.installedSnap}
                   onClick={async () => {
                     await createFork();
                     setSnapState(await getSnapState());
@@ -134,6 +135,7 @@ const Index = () => {
                   Create a live fork
                 </ActionButton>
                 <ActionButton
+                  disabled={!state.installedSnap}
                   onClick={async () => {
                     await acceptInvite();
                     setSnapState(await getSnapState());
@@ -157,6 +159,7 @@ const Index = () => {
               button: (
                 <>
                   <ActionButton
+                    disabled={!forkId}
                     onClick={async () => {
                       forked ? await unfork() : await fork();
                       setSnapState(await getSnapState());
@@ -187,6 +190,7 @@ const Index = () => {
                 : 'Use the MetaMask extension to execute any transaction on current network',
               button: (
                 <ActionButton
+                  disabled={!tradingPartner}
                   onClick={async () => {
                     try {
                       await sendTx({
@@ -223,6 +227,7 @@ const Index = () => {
               button: (
                 <>
                   <ActionButton
+                    disabled={!forkId}
                     onClick={async () => {
                       try {
                         if (proposalReceived) {
