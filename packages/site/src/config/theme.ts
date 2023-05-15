@@ -30,7 +30,7 @@ const theme = {
     large: `@media screen and (min-width: ${breakpoints[2]})`,
   },
   shadows: {
-    default: '0px 7px 42px rgba(0, 0, 0, 0.1)',
+    default: '0 8px 32px 0 rgba( 220, 238, 232, 0.07 )',
     button: '0px 0px 16.1786px rgba(0, 0, 0, 0.15);',
   },
 };
@@ -42,8 +42,8 @@ export const light: DefaultTheme = {
   colors: {
     background: {
       default: '#FFFFFF',
-      alternative: '#F2F4F6',
-      inverse: '#141618',
+      alternative: '#43384B',
+      inverse: '#43384B',
     },
     icon: {
       default: '#141618',
@@ -52,8 +52,8 @@ export const light: DefaultTheme = {
     text: {
       default: '#24272A',
       muted: '#6A737D',
-      alternative: '#535A61',
-      inverse: '#FFFFFF',
+      alternative: '#D6D9DC',
+      inverse: '#D6D9DC',
     },
     border: {
       default: '#BBC0C5',
@@ -80,29 +80,30 @@ export const light: DefaultTheme = {
 export const dark: DefaultTheme = {
   colors: {
     background: {
-      default: '#24272A',
-      alternative: '#141618',
-      inverse: '#FFFFFF',
+      default: '#2B2430',
+      alternative: '#43384B',
+      inverse: '#D6CEDB',
     },
     icon: {
       default: '#FFFFFF',
       alternative: '#BBC0C5',
     },
     text: {
-      default: '#FFFFFF',
-      muted: '#FFFFFF',
+      default: '#D6CEDB',
+      muted: '#9B8CA5',
       alternative: '#D6D9DC',
       inverse: '#24272A',
     },
     border: {
-      default: '#848C96',
+      default: 'rgba(255, 255, 255, 0.18)',
     },
     primary: {
       default: '#6F4CFF',
       inverse: '#FFFFFF',
     },
     card: {
-      default: '#141618',
+      default: 'rgba(191, 128, 61, 0.1)',
+      border: '1px solid rgba( 255, 255, 255, 0.18 )',
     },
     error: {
       default: '#d73a49',
@@ -127,7 +128,7 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     background-color: ${(props) => props.theme.colors.background.default};
-    color: ${(props) => props.theme.colors.text.default};
+    color: ${(props) => props.theme.colors.text.muted};
     font-family: ${(props) => props.theme.fonts.default};
     font-size: ${(props) => props.theme.fontSizes.text};
     margin: 0;
@@ -155,10 +156,12 @@ export const GlobalStyle = createGlobalStyle`
   button {
     font-size: ${(props) => props.theme.fontSizes.small};
     border-radius: ${(props) => props.theme.radii.button};
-    background-color: ${(props) => props.theme.colors.background.inverse};
-    color: ${(props) => props.theme.colors.text.inverse};
-    border: 1px solid ${(props) => props.theme.colors.background.inverse};
-    font-weight: bold;
+    border:none;
+    font-weight: 600;
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-size: 14px;
+    line-height: 155%;
     padding: 1rem;
     min-height: 4.2rem;
     cursor: pointer;

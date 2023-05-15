@@ -20,6 +20,7 @@ import {
   Card,
   SubTitle,
   SmallText,
+  ActionButton,
 } from '../components';
 import {
   CardContainer,
@@ -85,48 +86,6 @@ const Index = () => {
             <b>An error happened:</b> {state.error.message}
           </ErrorMessage>
         )}
-        {
-          <>
-            {rpcUrl && (
-              <Row>
-                <SubTitle>RPC URL</SubTitle>
-                <SmallText> {rpcUrl}</SmallText>
-              </Row>
-            )}
-            {forkId && (
-              <Row>
-                <SubTitle>Live fork hash</SubTitle>
-                <SmallText>{forkId}</SmallText>
-              </Row>
-            )}
-            {forkId && (
-              <Row>
-                <SubTitle>Fork status</SubTitle>
-                <SmallText>{forked ? 'Active' : 'Inactive'}</SmallText>
-              </Row>
-            )}
-            {selectedChainId && (
-              <Row>
-                <SubTitle>Connected chainId</SubTitle>
-                <SmallText>{selectedChainId}</SmallText>
-              </Row>
-            )}
-            {tradingPartner && (
-              <Row>
-                <SubTitle>Trade participant</SubTitle>
-                <SmallText>{tradingPartner}</SmallText>
-              </Row>
-            )}
-            {forkId && (
-              <Row>
-                <SubTitle>Merge status</SubTitle>
-                <SmallText>
-                  {proposalSent ? 'Awaiting confirmation' : 'Unmerged'}
-                </SmallText>
-              </Row>
-            )}
-          </>
-        }
 
         {!state.isFlask && (
           <Card
@@ -160,49 +119,75 @@ const Index = () => {
         <Card
           fullWidth
           content={{
-            title: '1. Prepare network',
+            orderNumber: 1,
+            title: 'Prepare network',
             description:
               'This step initializes a live fork connection where participating wallets can execute transactions.',
             info: 'You will have the option to specify a wallet address to trade with, which will need to confirm the merge request before transactions are reflected in the main network.',
             button: (
               <>
-                <button
+                <ActionButton
                   onClick={async () => {
                     await createFork();
                     setSnapState(await getSnapState());
                   }}
                 >
                   Create a live fork
-                </button>
-                <button
+                </ActionButton>
+                <ActionButton
                   onClick={async () => {
                     await acceptInvite();
                     setSnapState(await getSnapState());
                   }}
                 >
                   Join a live fork
-                </button>
+                </ActionButton>
               </>
             ),
           }}
           disabled={!state.installedSnap}
         />
 
+        {forkId && (
+          <Card
+            fullWidth
+            content={{
+              title: 'Switch fork',
+              orderNumber: 2,
+              info: 'Change network fork to transact and view activity.',
+              button: (
+                <>
+                  <ActionButton
+                    onClick={async () => {
+                      forked ? await unfork() : await fork();
+                      setSnapState(await getSnapState());
+                    }}
+                  >
+                    {forked ? 'Unfork' : 'Fork'}
+                  </ActionButton>
+                </>
+              ),
+            }}
+            disabled={!state.installedSnap}
+          />
+        )}
+
         {
           /* forkId && window.ethereum.chainId === FORK_CHAIN_ID && */ <Card
             fullWidth
             content={{
-              title: '2. Send tx',
+              orderNumber: 3,
+              title: 'Send tx',
               description: tradingPartner
                 ? `This opens the MetaMask extension to send 0.01 ETH to ${truncate(
                     tradingPartner,
                   )} on the current network.`
                 : undefined,
               info: tradingPartner
-                ? 'Alternatively, you can connect the MetaMask extension to any Dapp.'
+                ? 'Alternatively, you can connect the MetaMask extension to any Dapp or build your own transaction using the extension.'
                 : 'Use the MetaMask extension to execute any transaction on current network',
               button: (
-                <button
+                <ActionButton
                   onClick={async () => {
                     try {
                       await sendTx({
@@ -220,7 +205,7 @@ const Index = () => {
                   }}
                 >
                   Transact
-                </button>
+                </ActionButton>
               ),
             }}
             disabled={!state.installedSnap}
@@ -231,13 +216,14 @@ const Index = () => {
           /* forkId && window.ethereum.chainId === FORK_CHAIN_ID && */ <Card
             fullWidth
             content={{
-              title: '3. Merge live fork',
+              orderNumber: 4,
+              title: 'Merge fork',
               description:
                 'This broadcasts a transaction to trade participants that the fork should be merged back into the main chain.',
               info: 'Participants will need to confirm the request in order to finalize the merge.',
               button: (
                 <>
-                  <button
+                  <ActionButton
                     onClick={async () => {
                       try {
                         if (proposalReceived) {
@@ -255,36 +241,56 @@ const Index = () => {
                     }}
                   >
                     {proposalReceived ? 'Confirm merge' : 'Propose merge'}
-                  </button>
+                  </ActionButton>
                 </>
               ),
             }}
             disabled={!state.installedSnap}
           />
         }
-
-        {forkId && (
-          <Card
-            fullWidth
-            content={{
-              description: 'Change network fork to transact and view activity',
-              button: (
-                <>
-                  <button
-                    onClick={async () => {
-                      forked ? await unfork() : await fork();
-                      setSnapState(await getSnapState());
-                    }}
-                  >
-                    {forked ? 'Unfork' : 'Fork'}
-                  </button>
-                </>
-              ),
-            }}
-            disabled={!state.installedSnap}
-          />
-        )}
       </CardContainer>
+      {/*
+        <>
+          {rpcUrl && (
+            <Row>
+              <SubTitle>RPC URL</SubTitle>
+              <SmallText> {rpcUrl}</SmallText>
+            </Row>
+          )}
+          {forkId && (
+            <Row>
+              <SubTitle>Live fork hash</SubTitle>
+              <SmallText>{forkId}</SmallText>
+            </Row>
+          )}
+          {forkId && (
+            <Row>
+              <SubTitle>Fork status</SubTitle>
+              <SmallText>{forked ? 'Active' : 'Inactive'}</SmallText>
+            </Row>
+          )}
+          {selectedChainId && (
+            <Row>
+              <SubTitle>Connected chainId</SubTitle>
+              <SmallText>{selectedChainId}</SmallText>
+            </Row>
+          )}
+          {tradingPartner && (
+            <Row>
+              <SubTitle>Trade participant</SubTitle>
+              <SmallText>{tradingPartner}</SmallText>
+            </Row>
+          )}
+          {forkId && (
+            <Row>
+              <SubTitle>Merge status</SubTitle>
+              <SmallText>
+                {proposalSent ? 'Awaiting confirmation' : 'Unmerged'}
+              </SmallText>
+            </Row>
+          )}
+        </>
+          */}
     </Container>
   );
 };

@@ -12,7 +12,6 @@ const HeaderWrapper = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 2.4rem;
-  border-bottom: 1px solid ${(props) => props.theme.colors.border.default};
 `;
 
 const Title = styled.p`
@@ -23,7 +22,7 @@ const Title = styled.p`
   ${({ theme }) => theme.mediaQueries.small} {
     display: none;
   }
-  color: ${({ theme }) => theme.colors.error.inverse};
+  color: ${({ theme }) => theme.colors.text.default};
 `;
 
 export const SubTitle = styled.p`

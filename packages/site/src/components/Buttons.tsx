@@ -32,8 +32,14 @@ const Link = styled.a`
   }
 `;
 
+export const ActionButton = styled.button`
+  background: linear-gradient(92.14deg, #6657c2 1.25%, #9357c2 98.51%);
+  color: ${(props) => props.theme.colors.text.alternative};
+  border: 1px solid transparent;
+`;
+
 const Button = styled.button`
-  background-color: ${(props) => props.theme.colors.background.alternative};
+  background-color: ${(props) => props.theme.colors.background.inverse};
   color: ${(props) => props.theme.colors.text.inverse};
   display: flex;
   align-self: flex-start;
@@ -43,6 +49,7 @@ const Button = styled.button`
   ${({ theme }) => theme.mediaQueries.small} {
     width: 100%;
   }
+  border: 1px solid transparent;
 `;
 
 const ButtonText = styled.span`
