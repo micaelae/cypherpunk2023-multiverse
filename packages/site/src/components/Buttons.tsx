@@ -94,6 +94,15 @@ export const ConnectButton = (props: ComponentProps<typeof Button>) => {
   );
 };
 
+export const AddNetworkButton = (props: ComponentProps<typeof Button>) => {
+  return (
+    <Button {...props}>
+      <FlaskFox />
+      <ButtonText>Change network</ButtonText>
+    </Button>
+  );
+};
+
 export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
   return (
     <Button {...props}>

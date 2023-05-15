@@ -9,7 +9,7 @@ type CardProps = {
     button?: ReactElement;
     inputField?: ReactNode;
     info?: ReactNode;
-    orderNumber?: number;
+    orderNumber?: number | string;
   };
   disabled?: boolean;
   fullWidth?: boolean;

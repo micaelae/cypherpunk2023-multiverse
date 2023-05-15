@@ -13,14 +13,17 @@ import {
   unfork,
   fork,
   acceptInvite,
+  switchToForkedNetwork,
 } from '../utils';
 import {
   ConnectButton,
   InstallFlaskButton,
   Card,
   ActionButton,
+  AddNetworkButton,
 } from '../components';
 import { CardContainer, Container, ErrorMessage } from '../components/Styles';
+import { FORK_CHAIN_ID } from '../utils/constants';
 
 const truncate = (str: any) =>
   typeof str === 'string' ? `${str.slice(0, 5)}...${str.slice(-5)}` : str;
@@ -83,7 +86,7 @@ const Index = () => {
         {!state.isFlask && (
           <Card
             content={{
-              orderNumber: 0,
+              orderNumber: '',
               title: 'Install',
               info: 'Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.',
               button: (
@@ -99,13 +102,36 @@ const Index = () => {
           <Card
             fullWidth
             content={{
-              orderNumber: 0,
+              orderNumber: '',
               title: 'Connect',
               info: 'Get started by connecting to and installing the example snap.',
               button: (
                 <>
                   <ConnectButton
                     onClick={handleConnectClick}
+                    disabled={!state.isFlask}
+                  />
+                </>
+              ),
+            }}
+            disabled={!state.isFlask}
+          />
+        )}
+
+        {selectedChainId !== ethers.toNumber(FORK_CHAIN_ID) && (
+          <Card
+            fullWidth
+            content={{
+              orderNumber: '',
+              title: 'Add custom RPC network',
+              info: 'Get started by connecting to and installing the example snap.',
+              button: (
+                <>
+                  <AddNetworkButton
+                    onClick={async () => {
+                      await switchToForkedNetwork();
+                      setSelectedChainId(ethers.toNumber(FORK_CHAIN_ID));
+                    }}
                     disabled={!state.isFlask}
                   />
                 </>
@@ -126,7 +152,10 @@ const Index = () => {
             button: (
               <>
                 <ActionButton
-                  disabled={!state.installedSnap}
+                  disabled={
+                    !state.installedSnap ||
+                    selectedChainId !== ethers.toNumber(FORK_CHAIN_ID)
+                  }
                   onClick={async () => {
                     await createFork();
                     setSnapState(await getSnapState());
@@ -135,7 +164,10 @@ const Index = () => {
                   Create a live fork
                 </ActionButton>
                 <ActionButton
-                  disabled={!state.installedSnap}
+                  disabled={
+                    !state.installedSnap ||
+                    selectedChainId !== ethers.toNumber(FORK_CHAIN_ID)
+                  }
                   onClick={async () => {
                     await acceptInvite();
                     setSnapState(await getSnapState());
@@ -146,7 +178,10 @@ const Index = () => {
               </>
             ),
           }}
-          disabled={!state.installedSnap}
+          disabled={
+            !state.installedSnap ||
+            selectedChainId !== ethers.toNumber(FORK_CHAIN_ID)
+          }
         />
 
         {forkId && (
@@ -159,7 +194,10 @@ const Index = () => {
               button: (
                 <>
                   <ActionButton
-                    disabled={!forkId}
+                    disabled={
+                      !forkId ||
+                      selectedChainId !== ethers.toNumber(FORK_CHAIN_ID)
+                    }
                     onClick={async () => {
                       forked ? await unfork() : await fork();
                       setSnapState(await getSnapState());
@@ -170,7 +208,10 @@ const Index = () => {
                 </>
               ),
             }}
-            disabled={!state.installedSnap}
+            disabled={
+              !state.installedSnap ||
+              selectedChainId !== ethers.toNumber(FORK_CHAIN_ID)
+            }
           />
         )}
 
@@ -211,7 +252,10 @@ const Index = () => {
                 </ActionButton>
               ),
             }}
-            disabled={!state.installedSnap}
+            disabled={
+              !state.installedSnap ||
+              selectedChainId !== ethers.toNumber(FORK_CHAIN_ID)
+            }
           />
         }
 
@@ -227,7 +271,10 @@ const Index = () => {
               button: (
                 <>
                   <ActionButton
-                    disabled={!forkId}
+                    disabled={
+                      !forkId ||
+                      selectedChainId !== ethers.toNumber(FORK_CHAIN_ID)
+                    }
                     onClick={async () => {
                       try {
                         if (proposalReceived) {
@@ -249,7 +296,10 @@ const Index = () => {
                 </>
               ),
             }}
-            disabled={!state.installedSnap}
+            disabled={
+              !state.installedSnap ||
+              selectedChainId !== ethers.toNumber(FORK_CHAIN_ID)
+            }
           />
         }
       </CardContainer>
