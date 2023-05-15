@@ -1,4 +1,5 @@
 import * as ethers from 'ethers';
+import { BESU_ENDPOINT } from './constants';
 /**
  * Detect if the wallet injecting the ethereum object is Flask.
  *
@@ -20,7 +21,6 @@ export const isFlask = async () => {
   }
 };
 
-const BESU_ENDPOINT = 'https://hackathon-multiverse.dev.infura.org'; // 'http://127.0.0.1:8545';
 export const switchToForkedNetwork = async () => {
   await window.ethereum.request({
     method: 'wallet_addEthereumChain',
@@ -51,6 +51,8 @@ export const sendTx = async (data: any) => {
   console.log('provider', await provider.getNetwork());
   const signer = await provider.getSigner();
 
+  console.log('signer', signer);
+  console.log('data', data);
   const txSubmitRes = await signer.sendTransaction(data);
   return txSubmitRes;
 };

@@ -12,6 +12,7 @@ import {
   acceptMerge,
   unfork,
   fork,
+  acceptInvite,
 } from '../utils';
 import {
   ConnectButton,
@@ -155,27 +156,38 @@ const Index = () => {
             disabled={!state.isFlask}
           />
         )}
+
         <Card
           fullWidth
           content={{
             title: '1. Prepare network',
             description:
-              'This step creates a fork where participating wallets can execute transactions.',
+              'This step initializes a live fork connection where participating wallets can execute transactions.',
             info: 'You will have the option to specify a wallet address to trade with, which will need to confirm the merge request before transactions are reflected in the main network.',
             button: (
-              <button
-                onClick={async () => {
-                  await createFork();
-                  setSnapState(await getSnapState());
-                }}
-              >
-                Create a live fork
-              </button>
+              <>
+                <button
+                  onClick={async () => {
+                    await createFork();
+                    setSnapState(await getSnapState());
+                  }}
+                >
+                  Create a live fork
+                </button>
+                <button
+                  onClick={async () => {
+                    await acceptInvite();
+                    setSnapState(await getSnapState());
+                  }}
+                >
+                  Join a live fork
+                </button>
+              </>
             ),
           }}
           disabled={!state.installedSnap}
         />
-        {/* TODO connect to live fork for user2 */}
+
         {
           /* forkId && window.ethereum.chainId === FORK_CHAIN_ID && */ <Card
             fullWidth

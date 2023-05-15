@@ -1,4 +1,3 @@
-import { ethers } from 'ethers';
 import { defaultSnapOrigin } from '../config';
 import { GetSnapsResponse, Snap } from '../types';
 
@@ -121,6 +120,16 @@ export const acceptMerge = async (): Promise<any> => {
     params: {
       snapId: defaultSnapOrigin,
       request: { method: 'accept_merge', params: {} },
+    },
+  });
+};
+
+export const acceptInvite = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: { method: 'accept_trade_invite', params: {} },
     },
   });
 };

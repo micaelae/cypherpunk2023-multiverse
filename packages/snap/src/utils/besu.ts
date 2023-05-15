@@ -57,10 +57,10 @@ export const getLogs = async () => {
     const eventsResponse = await fetch(`${EVENTS_HOST}/logs`, {
       method: 'GET',
     });
-    const responseText = await eventsResponse.text();
-    return [responseText];
+    const event = await eventsResponse.json();
+    return event;
   } catch {
-    return [];
+    return {};
   }
 };
 

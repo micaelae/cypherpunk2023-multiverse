@@ -17,7 +17,6 @@ const approvalState = {};
 
 app.post('/reset', (req, res) => {
   try {
-    // console.debug(req);
     Object.keys(approvalState).forEach((key) => {
       delete approvalState[key];
     });
@@ -35,24 +34,31 @@ app.post('/reset', (req, res) => {
 
 app.get('/logs', (req, res) => {
   try {
-    // console.debug(req);
     console.log(approvalState);
-    res.writeHead(200, { 'Content-Type': 'text/html' });
     if (
       Object.values(approvalState).length === 2 &&
       Object.values(approvalState).every((state) => state)
     ) {
-      res.write('MergeFinalized');
+      res.writeHead(200, { 'Content-Type': 'json/application' });
+      res.write(JSON.stringify({ status: 'MergeFinalized' }));
     } else if (Object.values(approvalState).some((state) => state)) {
-      res.write('MergeProposal');
-    } else {
+      const proposer = Object.keys(approvalState)
+        ? Object.keys(approvalState)[0]
+        : undefined;
+      res.writeHead(200, { 'Content-Type': 'json/application' });
+      res.write(JSON.stringify({ status: 'MergeProposal', proposer }));
     }
 
     res.end();
   } catch (error) {
     console.error(error);
-    res.writeHead(500, { 'Content-Type': 'text/html' });
-    res.write(`Send notification failed: ${JSON.stringify(error)}`);
+    res.writeHead(500, { 'Content-Type': 'json/application' });
+    res.write(
+      JSON.stringify({
+        status: 'Failed',
+        error: `Send notification failed: ${JSON.stringify(error)}`,
+      }),
+    );
     res.end();
   }
 });
