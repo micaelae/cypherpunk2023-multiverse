@@ -10,8 +10,6 @@ import {
   getSnapState,
   getChainId,
   acceptMerge,
-  unfork,
-  fork,
   acceptInvite,
   switchToForkedNetwork,
 } from '../utils';
@@ -21,6 +19,7 @@ import {
   Card,
   ActionButton,
   AddNetworkButton,
+  Summary,
 } from '../components';
 import { CardContainer, Container, ErrorMessage } from '../components/Styles';
 import { FORK_CHAIN_ID } from '../utils/constants';
@@ -53,6 +52,10 @@ const Index = () => {
       (chainId) =>
         chainId && setSelectedChainId(ethers.toNumber(chainId.toString())),
     );
+
+    return () => {
+      window.ethereum.removeAllListeners('chainChanged');
+    };
   }, []);
 
   useEffect(() => {
@@ -64,18 +67,11 @@ const Index = () => {
     ab();
   }, [dispatch]);
 
-  // {"forkId":"0xafaa034faceb798ddd5566d456583d312696849cca3d1c5bdec9eaf8aa94d9ad","isMergeRequested":false,"tradingPartner":"0xAB86EB1D48D1Ad42063c23F8427ebD3601029cfA","mainNetwork":{"chainId":1,"nativeCurrency":"ETH"}}
-  const {
-    forkId,
-    tradingPartner,
-    rpcUrl,
-    proposalReceived,
-    forked,
-    proposalSent,
-  } = snapState ?? ({} as any);
+  const { forkId, tradingPartner, proposalReceived } = snapState ?? ({} as any);
 
   return (
     <Container>
+      <Summary forkId={forkId} />
       <CardContainer>
         {state.error && (
           <ErrorMessage>
@@ -184,7 +180,7 @@ const Index = () => {
           }
         />
 
-        {forkId && (
+        {/* forkId && (
           <Card
             fullWidth
             content={{
@@ -225,13 +221,13 @@ const Index = () => {
               selectedChainId !== ethers.toNumber(FORK_CHAIN_ID)
             }
           />
-        )}
+          )*/}
 
         {
           /* forkId && window.ethereum.chainId === FORK_CHAIN_ID && */ <Card
             fullWidth
             content={{
-              orderNumber: 3,
+              orderNumber: 2,
               title: 'Send tx',
               description: tradingPartner
                 ? `This opens the MetaMask extension to send 0.01 ETH to ${truncate(
@@ -275,7 +271,7 @@ const Index = () => {
           /* forkId && window.ethereum.chainId === FORK_CHAIN_ID && */ <Card
             fullWidth
             content={{
-              orderNumber: 4,
+              orderNumber: 3,
               title: 'Merge fork',
               description:
                 'This broadcasts a transaction to trade participants that the fork should be merged back into the main chain.',

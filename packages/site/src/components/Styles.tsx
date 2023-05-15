@@ -5,7 +5,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   flex: 1;
-  margin-top: 3.6rem;
+
   margin-bottom: 3.6rem;
   ${({ theme }) => theme.mediaQueries.small} {
     padding-left: 2.4rem;
@@ -110,5 +110,4 @@ export const Column = styled.div`
   flex-direction: column;
   align-self: start;
   justify-content: space-around;
-  height: 100%;
 `;
