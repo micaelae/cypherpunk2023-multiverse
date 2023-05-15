@@ -40,7 +40,7 @@ export const Card = ({ content, disabled = false, fullWidth }: CardProps) => {
         {title && <Title>{title}</Title>}
       </Row>
       <CardWrapper fullWidth={fullWidth} disabled={disabled}>
-        <Column>
+        <Column style={{ width: '100%' }}>
           <span style={{ width: '100%', height: '100%', marginLeft: '1rem' }}>
             <Column>
               {description && <Description>{description}</Description>}

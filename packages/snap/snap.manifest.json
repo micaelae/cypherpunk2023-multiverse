@@ -1,5 +1,5 @@
 {
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Cypherpunk 2023 project",
   "proposedName": "Multiverse Snap",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "Usnbx5PtNf9DgsrvpxekVUwNPPKBGz7YPZMbmGlIpxk=",
+    "shasum": "MFR1mdSD+U0FB+riP0zP2nsDNmbrrI7CDF2E9tj7jVg=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

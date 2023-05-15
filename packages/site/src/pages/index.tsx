@@ -199,11 +199,23 @@ const Index = () => {
                       selectedChainId !== ethers.toNumber(FORK_CHAIN_ID)
                     }
                     onClick={async () => {
-                      forked ? await unfork() : await fork();
+                      await fork();
                       setSnapState(await getSnapState());
                     }}
                   >
-                    {forked ? 'Deactivate fork' : 'Activate fork'}
+                    Activate fork
+                  </ActionButton>
+                  <ActionButton
+                    disabled={
+                      !forkId ||
+                      selectedChainId !== ethers.toNumber(FORK_CHAIN_ID)
+                    }
+                    onClick={async () => {
+                      await unfork();
+                      setSnapState(await getSnapState());
+                    }}
+                  >
+                    Deactivate fork
                   </ActionButton>
                 </>
               ),
