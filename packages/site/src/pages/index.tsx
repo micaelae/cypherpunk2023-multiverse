@@ -6,11 +6,9 @@ import {
   getSnap,
   createFork,
   sendTx,
-  switchToForkedNetwork,
   requestMerge,
   getSnapState,
   getChainId,
-  switchToMainNetwork,
   acceptMerge,
   unfork,
   fork,
@@ -28,7 +26,9 @@ import {
   ErrorMessage,
   Row,
 } from '../components/Styles';
-import { FORK_CHAIN_ID } from '../utils/constants';
+
+const truncate = (str: any) =>
+  typeof str === 'string' ? `${str.slice(0, 5)}...${str.slice(-5)}` : str;
 
 const Index = () => {
   const [state, dispatch] = useContext(MetaMaskContext);
@@ -182,7 +182,9 @@ const Index = () => {
             content={{
               title: '2. Send tx',
               description: tradingPartner
-                ? `This opens the MetaMask extension to send 0.01 ETH to ${tradingPartner} on the current network.`
+                ? `This opens the MetaMask extension to send 0.01 ETH to ${truncate(
+                    tradingPartner,
+                  )} on the current network.`
                 : undefined,
               info: tradingPartner
                 ? 'Alternatively, you can connect the MetaMask extension to any Dapp.'
