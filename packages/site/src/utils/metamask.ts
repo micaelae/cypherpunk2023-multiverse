@@ -27,7 +27,7 @@ export const switchToForkedNetwork = async () => {
     params: [
       {
         chainId: ethers.toQuantity(1553),
-        chainName: 'Local Besu fork',
+        chainName: 'Linea Multiverse',
         rpcUrls: [BESU_ENDPOINT],
         nativeCurrency: {
           name: 'ETH',
