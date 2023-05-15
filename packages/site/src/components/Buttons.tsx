@@ -162,7 +162,7 @@ const MutedButton = styled.div`
   font-size: 14px;
   border-radius: ${(props) => props.theme.radii.button};
   &:hover {
-    background-color: ${(props) => props.theme.colors.text.alternative};
+    background-color: ${(props) => props.theme.colors.text.inverse};
     border: 1px solid ${(props) => props.theme.colors.background.inverse};
     color: ${(props) => props.theme.colors.text.default};
   }
@@ -171,8 +171,8 @@ const MutedButton = styled.div`
 const ScrollableText = styled.div`
   width: 45rem;
   overflow: auto;
-  border-radius: ${(props) => props.theme.radii.button};
-  border: 0px solid ${(props) => props.theme.colors.text.default};
+  border-radius: 0;
+  border: 0px dashed ${(props) => props.theme.colors.background.alternative};
   padding: 0;
   align-contents: center;
   &::-webkit-scrollbar {
@@ -232,10 +232,15 @@ export const ClickToCopyButton = ({
   );
 };
 
+const truncate = (str: any) =>
+  typeof str === 'string' ? `${str.slice(0, 26)}...${str.slice(-26)}` : str;
+
 export const Summary = ({ forkId }: { forkId?: string }) => {
   return (
     <SummaryStyle>
-      {forkId && <ClickToCopyButton label="Active fork hash" data={forkId} />}
+      {forkId && (
+        <ClickToCopyButton label="Active fork hash" data={truncate(forkId)} />
+      )}
     </SummaryStyle>
   );
 };
