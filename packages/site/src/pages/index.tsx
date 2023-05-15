@@ -163,7 +163,7 @@ const Index = () => {
                       setSnapState(await getSnapState());
                     }}
                   >
-                    {forked ? 'Unfork' : 'Fork'}
+                    {forked ? 'Deactivate fork' : 'Activate fork'}
                   </ActionButton>
                 </>
               ),
