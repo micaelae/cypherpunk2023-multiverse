@@ -18,16 +18,9 @@ import {
   ConnectButton,
   InstallFlaskButton,
   Card,
-  SubTitle,
-  SmallText,
   ActionButton,
 } from '../components';
-import {
-  CardContainer,
-  Container,
-  ErrorMessage,
-  Row,
-} from '../components/Styles';
+import { CardContainer, Container, ErrorMessage } from '../components/Styles';
 
 const truncate = (str: any) =>
   typeof str === 'string' ? `${str.slice(0, 5)}...${str.slice(-5)}` : str;
@@ -90,10 +83,14 @@ const Index = () => {
         {!state.isFlask && (
           <Card
             content={{
+              orderNumber: 0,
               title: 'Install',
-              description:
-                'Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.',
-              button: <InstallFlaskButton />,
+              info: 'Snaps is pre-release software only available in MetaMask Flask, a canary distribution for developers with access to upcoming features.',
+              button: (
+                <>
+                  <InstallFlaskButton />
+                </>
+              ),
             }}
             fullWidth
           />
@@ -102,14 +99,16 @@ const Index = () => {
           <Card
             fullWidth
             content={{
+              orderNumber: 0,
               title: 'Connect',
-              description:
-                'Get started by connecting to and installing the example snap.',
+              info: 'Get started by connecting to and installing the example snap.',
               button: (
-                <ConnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.isFlask}
-                />
+                <>
+                  <ConnectButton
+                    onClick={handleConnectClick}
+                    disabled={!state.isFlask}
+                  />
+                </>
               ),
             }}
             disabled={!state.isFlask}

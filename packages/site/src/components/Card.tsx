@@ -36,7 +36,7 @@ export const Card = ({ content, disabled = false, fullWidth }: CardProps) => {
   return (
     <>
       <Row>
-        {orderNumber && <TitleNumber>{orderNumber}</TitleNumber>}
+        {orderNumber !== undefined && <TitleNumber>{orderNumber}</TitleNumber>}
         {title && <Title>{title}</Title>}
       </Row>
       <CardWrapper fullWidth={fullWidth} disabled={disabled}>

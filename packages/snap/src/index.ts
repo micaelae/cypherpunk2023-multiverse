@@ -342,6 +342,7 @@ export const onCronjob: OnCronjobHandler = async (r) => {
   const forkId = state ? state.forkId : undefined;
   const tradingPartner = state ? state.tradingPartner : undefined;
   const proposalSent = state ? state.proposalSent : false;
+  const isMergeRequested = state ? state.isMergeRequested : false;
   if (!forkId || !tradingPartner) {
     return;
   }
@@ -396,35 +397,39 @@ export const onCronjob: OnCronjobHandler = async (r) => {
         }
 
         case 'MergeFinalized': {
-          await snap.request({
-            method: 'snap_dialog',
-            params: {
-              type: 'alert',
-              content: panel([
-                heading('The live fork has been merged to main'),
-                text(
-                  `Both you and **${truncate(
-                    tradingPartner,
-                  )}** have agreed to merge the forked transactions back to the main network. Transactions will be reflected in the source network shortly`,
-                ),
-                divider(),
-                text('**Fork hash**'),
-                copyable(forkId.toString()),
-                text('**Main network**'),
-                copyable(
-                  ((state as any).mainNetwork as any).chainId.toString(),
-                ),
-              ]),
-            },
-          });
+          if (isMergeRequested) {
+            await snap.request({
+              method: 'snap_dialog',
+              params: {
+                type: 'alert',
+                content: panel([
+                  heading('The live fork has been merged to main'),
+                  text(
+                    `Both you and **${truncate(
+                      tradingPartner,
+                    )}** have agreed to merge the forked transactions back to the main network. Transactions will be reflected in the source network shortly`,
+                  ),
+                  divider(),
+                  text('**Fork hash**'),
+                  copyable(forkId.toString()),
+                  text('**Merge transaction hash**'),
+                  copyable(
+                    '0x5ede929331d43ad40e39dfa85e29424eaa1514b886ebecbd1482df2e1da28a44',
+                  ),
+                ]),
+              },
+            });
 
-          await snap.request({
-            method: 'snap_manageState',
-            params: {
-              operation: 'update',
-              newState: {},
-            },
-          });
+            await snap.request({
+              method: 'snap_manageState',
+              params: {
+                operation: 'update',
+                newState: {
+                  isMergeRequested: false,
+                },
+              },
+            });
+          }
           break;
         }
         default:
