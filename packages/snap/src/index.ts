@@ -1,6 +1,16 @@
 import { OnCronjobHandler, OnRpcRequestHandler } from '@metamask/snaps-types';
 import { copyable, divider, heading, panel, text } from '@metamask/snaps-ui';
-import { createFork, getLogs, resetEvents, signMerge } from './utils/besu';
+import {
+  BESU_ENDPOINT,
+  createFork,
+  getLogs,
+  resetEvents,
+  signMerge,
+  switchFork,
+} from './utils/besu';
+
+const truncate = (str: any) =>
+  typeof str === 'string' ? `${str.slice(0, 5)}...${str.slice(-5)}` : str;
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -22,6 +32,58 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
       return state;
     }
 
+    case 'fork': {
+      const state = await snap.request({
+        method: 'snap_manageState',
+        params: { operation: 'get' },
+      });
+      const forkId = state ? state.forkId : undefined;
+
+      if (!forkId) {
+        return undefined;
+      }
+
+      await switchFork(forkId.toString());
+      await snap.request({
+        method: 'snap_manageState',
+        params: {
+          operation: 'update',
+          newState: {
+            ...state,
+            forked: true,
+          },
+        },
+      });
+
+      return 'Switched RPC node to forked network';
+    }
+
+    case 'unfork': {
+      const state = await snap.request({
+        method: 'snap_manageState',
+        params: { operation: 'get' },
+      });
+      const forkId = state ? state.forkId : undefined;
+
+      if (!forkId) {
+        return undefined;
+      }
+
+      await switchFork();
+      await snap.request({
+        method: 'snap_manageState',
+        params: {
+          operation: 'update',
+          newState: {
+            ...state,
+            forked: false,
+          },
+        },
+      });
+
+      return 'Reverted RPC node to unforked network';
+    }
+
     case 'create_fork': {
       console.log('create_fork');
       const forkId = await createFork();
@@ -34,22 +96,26 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
           content: panel([
             heading("Enter the wallet address you'd like to trade with"),
             text(
-              'A live fork shared between you and this address will be created. Both you and this address must approve merging the forked transactions back to the main network.',
+              'A live fork shared between you and this address will be created. Both you and this address must approve merging the forked transactions back to the main network',
             ),
           ]),
-          placeholder: '0x123...',
+          placeholder: '0xAB601029cfA...',
         },
       });
 
       if (forkId && tradingPartner && typeof tradingPartner === 'string') {
+        await switchFork(forkId);
         await snap.request({
           method: 'snap_manageState',
           params: {
             operation: 'update',
             newState: {
               forkId,
+              forked: true,
               isMergeRequested: false,
               tradingPartner,
+              proposalSent: false,
+              rpcUrl: BESU_ENDPOINT,
               mainNetwork: {
                 chainId: 1,
                 nativeCurrency: 'ETH',
@@ -111,12 +177,14 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
           content: panel([
             heading('Initiate merging live fork back to main network'),
             text(
-              `Address ${tradingPartner} will be prompted to approve the merge back to the main network once your request has been confirmed.`,
+              `Address **${truncate(
+                tradingPartner,
+              )}** will be prompted to approve the merge back to the main network once you confirm your request`,
             ),
             divider(),
-            text('Fork hash:'),
+            text('**Fork hash**'),
             copyable(forkId.toString()),
-            text('Forked network:'),
+            text('**Forked network**'),
             copyable(((state as any).mainNetwork as any).chainId.toString()),
           ]),
         },
@@ -130,6 +198,7 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
             newState: {
               ...state,
               isMergeRequested: true,
+              proposalSent: true,
             },
           },
         });
@@ -157,9 +226,9 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
           content: panel([
             heading('Finalize merge of live fork back to main network'),
             divider(),
-            text('Fork hash:'),
+            text('**Fork hash**'),
             copyable(forkId.toString()),
-            text('Main network:'),
+            text('**Main network**'),
             copyable(((state as any).mainNetwork as any).chainId.toString()),
           ]),
         },
@@ -187,13 +256,13 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
 
 export const onCronjob: OnCronjobHandler = async (r) => {
   const { request } = r;
-  console.log(r, request, origin);
   const state = await snap.request({
     method: 'snap_manageState',
     params: { operation: 'get' },
   });
   const forkId = state ? state.forkId : undefined;
   const tradingPartner = state ? state.tradingPartner : undefined;
+  const proposalSent = state ? state.proposalSent : false;
   if (!forkId || !tradingPartner) {
     return;
   }
@@ -205,6 +274,9 @@ export const onCronjob: OnCronjobHandler = async (r) => {
 
       switch (latestLog) {
         case 'MergeProposal': {
+          if (proposalSent) {
+            return;
+          }
           const response = await snap.request({
             method: 'snap_dialog',
             params: {
@@ -212,12 +284,14 @@ export const onCronjob: OnCronjobHandler = async (r) => {
               content: panel([
                 heading('Finalize merge of live fork back to main network'),
                 text(
-                  `Address ${tradingPartner} has requested to merge the forked transactions back to the main network and needs your confirmation.`,
+                  `Address **${truncate(
+                    tradingPartner,
+                  )}** has requested to merge the forked transactions back to the main network and needs your confirmation`,
                 ),
                 divider(),
-                text('Fork hash:'),
+                text('**Fork hash**'),
                 copyable(forkId.toString()),
-                text('Main network:'),
+                text('**Main network**'),
                 copyable(
                   ((state as any).mainNetwork as any).chainId.toString(),
                 ),
@@ -232,6 +306,7 @@ export const onCronjob: OnCronjobHandler = async (r) => {
                 newState: {
                   ...state,
                   isMergeRequested: true,
+                  proposalReceived: true,
                 },
               },
             });
@@ -248,12 +323,14 @@ export const onCronjob: OnCronjobHandler = async (r) => {
               content: panel([
                 heading('The live fork has been merged to main'),
                 text(
-                  `Both you and ${tradingPartner} have agreed to merge the forked transactions back to the main network. Transactions will be reflected in the source network`,
+                  `Both you and **${truncate(
+                    tradingPartner,
+                  )}** have agreed to merge the forked transactions back to the main network. Transactions will be reflected in the source network shortly`,
                 ),
                 divider(),
-                text('Fork hash:'),
+                text('**Fork hash**'),
                 copyable(forkId.toString()),
-                text('Main network:'),
+                text('**Main network**'),
                 copyable(
                   ((state as any).mainNetwork as any).chainId.toString(),
                 ),

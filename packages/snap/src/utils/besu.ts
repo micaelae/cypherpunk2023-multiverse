@@ -1,9 +1,11 @@
-const BESU_ENDPOINT = 'http://127.0.0.1:8545';
+export const BESU_ENDPOINT = 'https://hackathon-multiverse.dev.infura.org';
+// export const BESU_ENDPOINT = 'http://127.0.0.1:8545';
 const EVENTS_HOST = 'http://127.0.0.1:3001';
 
 export const createFork = async (chainId?: number) => {
   try {
     const besuResponse = await fetch(BESU_ENDPOINT, {
+      mode: 'cors',
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain',
@@ -17,17 +19,18 @@ export const createFork = async (chainId?: number) => {
     });
     // curl --location --request POST 'http://127.0.0.1:8545' --header 'Content-Type: text/plain' --data-raw '{"jsonrpc":"2.0","method":"eth_createFork","params":[], "id":1}'
 
-    const responseJson = await besuResponse.json();
+    const responseJson = await (await besuResponse).json();
     return responseJson.result;
-  } catch {
+  } catch (e) {
+    console.error(e);
     return 'testForkId';
   }
 };
 
-// TODO: call this DURING SWITCH network as well
-export const switchFork = async (forkId: string, chainId?: number) => {
+export const switchFork = async (forkId = '') => {
   try {
     const besuResponse = await fetch(BESU_ENDPOINT, {
+      mode: 'cors',
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain',
@@ -36,11 +39,12 @@ export const switchFork = async (forkId: string, chainId?: number) => {
         jsonrpc: '2.0',
         method: 'eth_switchFork',
         params: [forkId],
-        id: chainId ?? '',
+        id: 1,
       }),
     });
 
     // curl --location --request POST 'http://127.0.0.1:8545' --header 'Content-Type: text/plain' --data-raw '{"jsonrpc":"2.0","method":"eth_switchFork","params":["0xafaa034faceb798ddd5566d456583d312696849cca3d1c5bdec9eaf8aa94d9ad"], "id":1}'
+    // curl --location --request POST 'http://127.0.0.1:8545' --header 'Content-Type: text/plain' --data-raw '{"jsonrpc":"2.0","method":"eth_switchFork","params":[""], "id":1}'
     const responseJson = await besuResponse.json();
     return responseJson.result === 'Success';
   } catch {

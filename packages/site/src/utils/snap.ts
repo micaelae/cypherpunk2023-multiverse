@@ -85,6 +85,26 @@ export const createFork = async (): Promise<any> => {
   });
 };
 
+export const unfork = async (): Promise<any> => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: { method: 'unfork', params: {} },
+    },
+  });
+};
+
+export const fork = async (): Promise<any> => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: { method: 'fork', params: {} },
+    },
+  });
+};
+
 export const requestMerge = async (): Promise<any> => {
   return await window.ethereum.request({
     method: 'wallet_invokeSnap',

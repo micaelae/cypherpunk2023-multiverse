@@ -20,7 +20,7 @@ export const isFlask = async () => {
   }
 };
 
-const BESU_ENDPOINT = 'http://127.0.0.1:8545';
+const BESU_ENDPOINT = 'https://hackathon-multiverse.dev.infura.org'; // 'http://127.0.0.1:8545';
 export const switchToForkedNetwork = async () => {
   await window.ethereum.request({
     method: 'wallet_addEthereumChain',
@@ -41,7 +41,7 @@ export const switchToForkedNetwork = async () => {
 
 export const switchToMainNetwork = async (networkDetails: any) => {
   await window.ethereum.request({
-    method: 'wallet_addEthereumChain',
+    method: 'wallet_switchEthereumChain',
     params: [networkDetails],
   });
 };
@@ -53,4 +53,10 @@ export const sendTx = async (data: any) => {
 
   const txSubmitRes = await signer.sendTransaction(data);
   return txSubmitRes;
+};
+
+export const getChainId = async () => {
+  return await window.ethereum.request({
+    method: 'eth_chainId',
+  });
 };

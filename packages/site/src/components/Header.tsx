@@ -23,6 +23,27 @@ const Title = styled.p`
   ${({ theme }) => theme.mediaQueries.small} {
     display: none;
   }
+  color: ${({ theme }) => theme.colors.error.inverse};
+`;
+
+export const SubTitle = styled.p`
+  font-size: ${(props) => props.theme.fontSizes.small};
+  font-weight: bold;
+  margin: 0;
+  margin-left: 1.2rem;
+  ${({ theme }) => theme.mediaQueries.small} {
+    display: none;
+  }
+`;
+
+export const SmallText = styled.p`
+  font-size: ${(props) => props.theme.fontSizes.small};
+  margin: 0;
+  margin-left: 1.2rem;
+  ${({ theme }) => theme.mediaQueries.small} {
+    display: none;
+  }
+  width: 75%;
 `;
 
 const LogoWrapper = styled.div`

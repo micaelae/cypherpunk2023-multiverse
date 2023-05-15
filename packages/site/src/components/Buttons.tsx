@@ -22,7 +22,7 @@ const Link = styled.a`
 
   &:hover {
     background-color: transparent;
-    border: 1px solid ${(props) => props.theme.colors.background.inverse};
+    border: 1px solid ${(props) => props.theme.colors.background.alternative};
     color: ${(props) => props.theme.colors.text.default};
   }
 
@@ -33,6 +33,8 @@ const Link = styled.a`
 `;
 
 const Button = styled.button`
+  background-color: ${(props) => props.theme.colors.background.alternative};
+  color: ${(props) => props.theme.colors.text.inverse};
   display: flex;
   align-self: flex-start;
   align-items: center;
@@ -92,18 +94,6 @@ export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
       <ButtonText>Reconnect</ButtonText>
     </Button>
   );
-};
-
-export const ProposeMergeButton = (props: ComponentProps<typeof Button>) => {
-  return <Button {...props}>Propose merge</Button>;
-};
-
-export const AcceptMergeButton = (props: ComponentProps<typeof Button>) => {
-  return <Button {...props}>Accept merge proposal</Button>;
-};
-
-export const SendHelloButton = (props: ComponentProps<typeof Button>) => {
-  return <Button {...props}>Send message</Button>;
 };
 
 export const HeaderButtons = ({

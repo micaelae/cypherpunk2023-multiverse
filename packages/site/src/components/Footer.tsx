@@ -38,8 +38,8 @@ export const Footer = () => {
       <PoweredByButton href="https://docs.metamask.io/" target="_blank">
         <MetaMaskFox />
         <PoweredByContainer>
-          <PoweredBy color={theme.colors.text.muted} />
-          <MetaMask color={theme.colors.text.default} />
+          <PoweredBy color={theme.colors.text.inverse} />
+          <MetaMask color={theme.colors.text.inverse} />
         </PoweredByContainer>
       </PoweredByButton>
     </FooterWrapper>
