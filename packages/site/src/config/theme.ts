@@ -42,9 +42,10 @@ export const light: DefaultTheme = {
   colors: {
     background: {
       default: '#FFFFFF',
-      alternative: '#43384B',
-      inverse: '#43384B',
-      action: 'linear-gradient(92.14deg, #ddd2e6 1.25%, #c7d9ed 98.51%)',
+      alternative: 'rgba(67,56,75,0.7)',
+      inverse: 'rgba(67,56,75,0.7)',
+      action:
+        'linear-gradient(92.14deg, rgba(102,87,194,0.7) 1.25%, rgba(147,87,194,0.7) 98.51%)',
     },
     icon: {
       default: '#141618',
@@ -55,9 +56,10 @@ export const light: DefaultTheme = {
       muted: '#9B8CA5',
       alternative: '#D6D9DC',
       inverse: '#D6D9DC',
+      action: '#434547',
     },
     border: {
-      default: '#BBC0C5',
+      default: '#D6D9DC',
     },
     primary: {
       default: '#6F4CFF',
@@ -82,9 +84,10 @@ export const dark: DefaultTheme = {
   colors: {
     background: {
       default: '#2B2430',
-      alternative: '#43384B',
-      inverse: '#D6CEDB',
-      action: 'linear-gradient(92.14deg, #6657c2 1.25%, #9357c2 98.51%)',
+      alternative: 'rgba(67,56,75)',
+      inverse: 'rgba(155,140,165,0.8)',
+      action:
+        'linear-gradient(92.14deg, rgba(102,87,194,0.8) 1.25%, rgba(147,87,194,0.8) 98.51%)',
     },
     icon: {
       default: '#FFFFFF',
@@ -95,6 +98,7 @@ export const dark: DefaultTheme = {
       muted: '#9B8CA5',
       alternative: '#D6D9DC',
       inverse: '#24272A',
+      action: '#D6CEDB',
     },
     border: {
       default: 'rgba(255, 255, 255, 0.18)',

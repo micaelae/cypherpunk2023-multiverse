@@ -35,7 +35,7 @@ const Link = styled.a`
 
 export const ActionButton = styled.button`
   background: ${(props) => props.theme.colors.background.action};
-  color: ${(props) => props.theme.colors.text.default};
+  color: ${(props) => props.theme.colors.text.action};
   border: 1px solid transparent;
 `;
 
@@ -140,12 +140,14 @@ export const HeaderButtons = ({
   );
 };
 
-const MutedButton = styled.div`
+const MutedButton = styled.button`
   background-color: ${(props) => props.theme.colors.background.default};
   color: ${(props) => props.theme.colors.text.default};
   width: 100%;
+  height: 100%;
   display: flex;
   align-self: center;
+  align-items: center;
   justify-content: center;
   margin-left: 2rem;
   ${({ theme }) => theme.mediaQueries.small} {
@@ -162,9 +164,9 @@ const MutedButton = styled.div`
   font-size: 14px;
   border-radius: ${(props) => props.theme.radii.button};
   &:hover {
-    background-color: ${(props) => props.theme.colors.text.inverse};
+    background-color: ${(props) => props.theme.colors.background.inverse};
     border: 1px solid ${(props) => props.theme.colors.background.inverse};
-    color: ${(props) => props.theme.colors.text.default};
+    color: ${(props) => props.theme.colors.text.alternative};
   }
 `;
 
@@ -207,9 +209,11 @@ const SummaryStyle = styled.div`
 export const ClickToCopyButton = ({
   label,
   data,
+  onResetHandler,
 }: {
   label: string;
   data: any;
+  onResetHandler: () => Promise<void>;
 }) => {
   const dataString = data ? data.toString() : '';
   const [buttonText, setButtonText] = useState('Copy');
@@ -228,6 +232,7 @@ export const ClickToCopyButton = ({
       >
         {buttonText}
       </MutedButton>
+      <MutedButton onClick={onResetHandler}>Reset</MutedButton>
     </Row>
   );
 };
@@ -235,11 +240,21 @@ export const ClickToCopyButton = ({
 const truncate = (str: any) =>
   typeof str === 'string' ? `${str.slice(0, 26)}...${str.slice(-26)}` : str;
 
-export const Summary = ({ forkId }: { forkId?: string }) => {
+export const Summary = ({
+  forkId,
+  onResetHandler,
+}: {
+  forkId?: string;
+  onResetHandler: () => Promise<void>;
+}) => {
   return (
     <SummaryStyle>
       {forkId && (
-        <ClickToCopyButton label="Active fork hash" data={truncate(forkId)} />
+        <ClickToCopyButton
+          label="Active fork hash"
+          data={truncate(forkId)}
+          onResetHandler={onResetHandler}
+        />
       )}
     </SummaryStyle>
   );

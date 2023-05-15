@@ -32,6 +32,19 @@ export const onRpcRequest: OnRpcRequestHandler = async (req) => {
       return state;
     }
 
+    case 'reset_state': {
+      const state = await snap.request({
+        method: 'snap_manageState',
+        params: { operation: 'update', newState: {} },
+      });
+      try {
+        await resetEvents();
+      } catch (e) {
+        console.error(e);
+      }
+      return state;
+    }
+
     case 'fork': {
       const state = await snap.request({
         method: 'snap_manageState',

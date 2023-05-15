@@ -12,6 +12,7 @@ import {
   acceptMerge,
   acceptInvite,
   switchToForkedNetwork,
+  resetSnap,
 } from '../utils';
 import {
   ConnectButton,
@@ -71,7 +72,13 @@ const Index = () => {
 
   return (
     <Container>
-      <Summary forkId={forkId} />
+      <Summary
+        forkId={forkId}
+        onResetHandler={async () => {
+          await resetSnap();
+          setSnapState(await getSnapState());
+        }}
+      />
       <CardContainer>
         {state.error && (
           <ErrorMessage>

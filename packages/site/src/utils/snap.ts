@@ -50,6 +50,15 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
   }
 };
 
+export const resetSnap = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: { method: 'reset_state' },
+    },
+  });
+};
 /**
  * Invoke the "hello" method from the example snap.
  */
