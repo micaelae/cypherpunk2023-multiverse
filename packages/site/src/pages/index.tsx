@@ -65,6 +65,7 @@ const Index = () => {
       const chainId = await getChainId();
       chainId && setSelectedChainId(ethers.toNumber(chainId.toString()));
     };
+
     ab();
   }, [dispatch]);
 

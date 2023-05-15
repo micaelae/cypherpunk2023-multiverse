@@ -206,6 +206,8 @@ const SummaryStyle = styled.div`
   padding-bottom: 1rem;
 `;
 
+const truncate = (str: any) =>
+  typeof str === 'string' ? `${str.slice(0, 26)}...${str.slice(-26)}` : str;
 export const ClickToCopyButton = ({
   label,
   data,
@@ -221,7 +223,7 @@ export const ClickToCopyButton = ({
     <Row style={{ marginBottom: '0.5rem', marginTop: '0.5rem' }}>
       <Column>
         <CopyLabel>{label}</CopyLabel>
-        <ScrollableText>{dataString}</ScrollableText>
+        <ScrollableText>{truncate(dataString)}</ScrollableText>
       </Column>
       <MutedButton
         onClick={() => {
@@ -237,9 +239,6 @@ export const ClickToCopyButton = ({
   );
 };
 
-const truncate = (str: any) =>
-  typeof str === 'string' ? `${str.slice(0, 26)}...${str.slice(-26)}` : str;
-
 export const Summary = ({
   forkId,
   onResetHandler,
@@ -252,7 +251,7 @@ export const Summary = ({
       {forkId && (
         <ClickToCopyButton
           label="Active fork hash"
-          data={truncate(forkId)}
+          data={forkId}
           onResetHandler={onResetHandler}
         />
       )}
